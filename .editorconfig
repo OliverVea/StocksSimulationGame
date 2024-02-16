@@ -1,0 +1,6 @@
+root = true
+
+[*.cs]
+# Disable MA0004: Use ConfigureAwait
+dotnet_diagnostic.MA0004.severity = none
+
