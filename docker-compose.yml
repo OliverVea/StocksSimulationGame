@@ -1,0 +1,27 @@
+services: 
+    web:
+        build:
+            context: .
+            dockerfile: API.Dockerfile
+        ports:
+        - "5000:8080"
+        volumes:
+        - ./src/API/Data:/app/Data 
+        environment:
+            ConnectionStrings__DefaultConnection: "Host=db;Database=postgres;Username=postgres;Password=postgres"
+    
+    db:
+        image: "postgres:latest"
+        environment:
+            POSTGRES_USER: "postgres"
+            POSTGRES_PASSWORD: "postgres"
+            POSTGRES_DB: "postgres"
+            
+    message-queue:
+        image: "rabbitmq:3-management"
+        ports:
+        - "15672:15672"
+        - "5672:5672"
+        environment:
+            RABBITMQ_DEFAULT_USER: "guest"
+            RABBITMQ_DEFAULT_PASS: "guest"

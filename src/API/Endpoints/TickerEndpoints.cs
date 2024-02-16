@@ -11,24 +11,45 @@ public static class TickerEndpoints
         endpoints.MapGet("/api/tickers", async (
             [FromServices] ITickerService tickerService) =>
         {
-            var tickers = await tickerService.ListTickersAsync(new ListTickersRequest(), CancellationToken.None);
-            return Results.Ok(tickers.TickerIds.Select(x => x.Ticker));
+            try
+            {
+                var tickers = await tickerService.ListTickersAsync(new ListTickersRequest(), CancellationToken.None);
+                return Results.Ok(tickers.TickerIds.Select(x => x.Ticker));
+            }
+            catch (Exception e)
+            {
+                return Results.BadRequest(e.Message);
+            }
         });
 
         endpoints.MapPost("/api/tickers", async (
             [FromServices] ITickerService tickerService,
             [FromBody] AddTickersRequest request) =>
         {
-            var response = await tickerService.AddTickersAsync(request, CancellationToken.None);
-            return Results.Ok(response.AddedTickerIds);
+            try
+            {
+                var response = await tickerService.AddTickersAsync(request, CancellationToken.None);
+                return Results.Ok(response.AddedTickerIds);
+            } 
+            catch (Exception e)
+            {
+                return Results.BadRequest(e.Message);
+            }
         });
 
         endpoints.MapDelete("/api/tickers", async (
             [FromServices] ITickerService tickerService,
             [FromBody] DeleteTickersRequest request) =>
         {
-            var response = await tickerService.DeleteTickersAsync(request, CancellationToken.None);
-            return Results.Ok(response.DeletedTickerIds);
+            try 
+            {
+                var response = await tickerService.DeleteTickersAsync(request, CancellationToken.None);
+                return Results.Ok(response.DeletedTickerIds);
+            }
+            catch (Exception e)
+            {
+                return Results.BadRequest(e.Message);
+            }
         });
     }
 }
