@@ -13,7 +13,7 @@ app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
-app.AddTickerEndpoints();
+app.AddStockEndpoints();
 
 await app.Services.MigrateAsync();
 

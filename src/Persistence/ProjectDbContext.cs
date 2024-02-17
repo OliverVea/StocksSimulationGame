@@ -7,14 +7,15 @@ internal class ProjectDbContext(DbContextOptions<ProjectDbContext> options) : Db
 {
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Ticker>(entity =>
+        modelBuilder.Entity<Stock>(entity =>
         {
             entity.HasKey(e => e.Id);
-            entity.HasIndex(e => e.TickerId).IsUnique();
+            entity.HasIndex(e => e.StockId).IsUnique();
+            entity.HasIndex(e => e.Ticker).IsUnique();
         });
 
         base.OnModelCreating(modelBuilder);
     }
 
-    public required DbSet<Ticker> Tickers { get; init; }
+    public required DbSet<Stock> Stocks { get; init; }
 }

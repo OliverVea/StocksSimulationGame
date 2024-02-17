@@ -5,6 +5,6 @@ namespace Persistence;
 
 internal interface IDbContext
 {
-    DbSet<Ticker> Tickers { get; }
+    DbSet<Stock> Stocks { get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }

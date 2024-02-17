@@ -7,7 +7,7 @@ public static class ServiceExtensions
 {
     public static IServiceCollection AddCore(this IServiceCollection services)
     {
-        services.AddScoped<ITickerService, TickerService>();
+        services.AddScoped<IStockService, StockService>();
 
         return services;
     }
