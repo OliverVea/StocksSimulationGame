@@ -17,6 +17,20 @@ namespace Persistence.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.2");
 
+            modelBuilder.Entity("Persistence.Entities.CurrentSimulationStep", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("SimulationStep")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CurrentSimulationSteps");
+                });
+
             modelBuilder.Entity("Persistence.Entities.Stock", b =>
                 {
                     b.Property<long>("Id")

@@ -11,7 +11,7 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(ProjectDbContext))]
-    [Migration("20240218091545_Initial")]
+    [Migration("20240218175709_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -19,6 +19,20 @@ namespace Persistence.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.2");
+
+            modelBuilder.Entity("Persistence.Entities.CurrentSimulationStep", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("SimulationStep")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CurrentSimulationSteps");
+                });
 
             modelBuilder.Entity("Persistence.Entities.Stock", b =>
                 {

@@ -1,35 +1,47 @@
 ﻿using AutoFixture;
-using Core.Models;
 using Core.Repositories;
 using NUnit.Framework;
 
 namespace Tests.Persistence;
 
-public class SimulationStepStorageRepositoryIT : BaseIT
+public class SimulationStepStorageRepositoryIT : BaseIT<ISimulationStepStorageRepository>
 {
     [Test]
-    public async Task GetCurrentSimulationStepAsync_WhenNoStockPricesAreAvailable_ReturnsZeros()
+    public async Task SetCurrentSimulationStepAsync_WhenCalledWithSimulationStep_ShouldSetCurrentSimulationStep()
     {
+        // Arrange
+        var simulationStep = DataBuilder.SimulationStep().Create();
+
         // Act
-        var result = await GetService<ISimulationStepStorageRepository>().GetCurrentSimulationStepAsync(CancellationToken.None);
+        await Sut.SetCurrentSimulationStepAsync(simulationStep, CancellationToken.None);
+        var actual = await Sut.GetCurrentSimulationStepAsync(CancellationToken.None);
 
         // Assert
-        Assert.That(result.Step, Is.Zero);
+        Assert.That(actual, Is.EqualTo(simulationStep));
     }
     
     [Test]
-    public async Task GetCurrentSimulationStepAsync_WhenStockPricesAreAvailable_ReturnsMaxStep()
+    public async Task GetCurrentSimulationStepAsync_WhenCalled_ShouldGetSimulationStep()
     {
         // Arrange
-        var simulationStep = new SimulationStep(2);
-        var setStockPrice = DataBuilder.SetStockPriceRequest().With(x => x.SimulationStep, simulationStep).Create();
-        var setStockPricesRequest = DataBuilder.SetStockPricesRequest().With(x => x.StockPrices, [setStockPrice]).Create();
-        await GetService<IStockPriceStorageRepository>().SetStockPricesAsync(setStockPricesRequest, CancellationToken.None);
+        var simulationStep = DataBuilder.SimulationStep().Create();
+        await Sut.SetCurrentSimulationStepAsync(simulationStep, CancellationToken.None);
 
         // Act
-        var result = await GetService<ISimulationStepStorageRepository>().GetCurrentSimulationStepAsync(CancellationToken.None);
+        var actual = await Sut.GetCurrentSimulationStepAsync(CancellationToken.None);
 
         // Assert
-        Assert.That(result, Is.EqualTo(simulationStep));
+        Assert.That(actual, Is.EqualTo(simulationStep));
+    }
+    
+    [Test]
+    [Order(0)]
+    public async Task GetCurrentSimulationStepAsync_WhenCalledWithoutSetting_ShouldGetNull()
+    {
+        // Act
+        var actual = await Sut.GetCurrentSimulationStepAsync(CancellationToken.None);
+
+        // Assert
+        Assert.That(actual.Step, Is.Zero);
     }
 }

@@ -5,7 +5,7 @@ using NUnit.Framework;
 
 namespace Tests.Persistence;
 
-public class StockStorageRepositoryIT : BaseIT
+public class StockStorageRepositoryIT : BaseIT<IStockStorageRepository>
 {
     [Test]
     public async Task AddStocksAsync_WithSingleStock_RespondsCreatedStock()
@@ -18,8 +18,8 @@ public class StockStorageRepositoryIT : BaseIT
             .Create();
 
         // Act
-        await GetService<IStockStorageRepository>().AddStocksAsync(request, CancellationToken.None);
-        var listResponse = await GetService<IStockStorageRepository>().ListStocksAsync(DataBuilder.ListStocksRequest().Create(), CancellationToken.None);
+        await Sut.AddStocksAsync(request, CancellationToken.None);
+        var listResponse = await Sut.ListStocksAsync(DataBuilder.ListStocksRequest().Create(), CancellationToken.None);
 
         // Assert
         var expectedStockIds = listResponse.Stocks.Where(x => x.StockId == stock.StockId).ToArray();
@@ -36,12 +36,12 @@ public class StockStorageRepositoryIT : BaseIT
             .With(x => x.Stocks, [stock])
             .Create();
 
-        await GetService<IStockStorageRepository>().AddStocksAsync(addRequest, CancellationToken.None);
+        await Sut.AddStocksAsync(addRequest, CancellationToken.None);
 
         var request = DataBuilder.ListStocksRequest().Create();
 
         // Act
-        var listResponse = await GetService<IStockStorageRepository>().ListStocksAsync(request, CancellationToken.None);
+        var listResponse = await Sut.ListStocksAsync(request, CancellationToken.None);
 
         // Assert
         var expectedStockIds = listResponse.Stocks.Where(x => x.StockId == stock.StockId).ToArray();
@@ -59,15 +59,15 @@ public class StockStorageRepositoryIT : BaseIT
             .With(x => x.Stocks, [stock])
             .Create();
 
-        await GetService<IStockStorageRepository>().AddStocksAsync(addRequest, CancellationToken.None);
+        await Sut.AddStocksAsync(addRequest, CancellationToken.None);
 
         var deleteRequest = DataBuilder.DeleteStocksRequest()
             .With(x => x.StockIds, stockIds)
             .Create();
 
         // Act
-        await GetService<IStockStorageRepository>().DeleteStocksAsync(deleteRequest, CancellationToken.None);
-        var listResponse = await GetService<IStockStorageRepository>().ListStocksAsync(DataBuilder.ListStocksRequest().Create(), CancellationToken.None);
+        await Sut.DeleteStocksAsync(deleteRequest, CancellationToken.None);
+        var listResponse = await Sut.ListStocksAsync(DataBuilder.ListStocksRequest().Create(), CancellationToken.None);
 
         // Assert
         var expectedStockIds = listResponse.Stocks.Where(x => x.StockId == stock.StockId).ToArray();

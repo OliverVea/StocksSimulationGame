@@ -22,9 +22,15 @@ internal class ProjectDbContext(DbContextOptions<ProjectDbContext> options) : Db
             entity.HasIndex(e => e.SimulationStep);
         });
 
+        modelBuilder.Entity<CurrentSimulationStep>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+        });
+
         base.OnModelCreating(modelBuilder);
     }
 
     public required DbSet<Stock> Stocks { get; init; }
     public required DbSet<StockPrice> StockPrices { get; init; }
+    public required DbSet<CurrentSimulationStep> CurrentSimulationSteps { get; init; }
 }

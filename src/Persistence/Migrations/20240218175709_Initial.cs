@@ -12,6 +12,19 @@ namespace Persistence.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "CurrentSimulationSteps",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    SimulationStep = table.Column<long>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CurrentSimulationSteps", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "StockPrices",
                 columns: table => new
                 {
@@ -69,6 +82,9 @@ namespace Persistence.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "CurrentSimulationSteps");
+
             migrationBuilder.DropTable(
                 name: "StockPrices");
 
