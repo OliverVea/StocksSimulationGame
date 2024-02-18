@@ -1,4 +1,6 @@
-﻿using Core.Models.Ids;
+﻿using Core.Models;
+using Core.Models.Ids;
+using Core.Models.Prices;
 using Core.Models.Stocks;
 
 namespace API.Models;
@@ -50,21 +52,34 @@ public sealed record AddStocksRequestModel
         public required float Drift { get; init; }
     }
     
-    internal AddStocksRequest ToRequest()
+    internal (AddStocksRequest, SetStockPricesRequest) ToRequests()
     {
         var stocks = Stocks.Select(x => new AddStockRequest
         {
             StockId = new StockId(Guid.NewGuid()),
             Ticker = x.Ticker,
-            StartingPrice = x.StartingPrice,
             Drift = x.Drift,
             Volatility = x.Volatility,
         }).ToArray();
-
-        return new AddStocksRequest
+        
+        var addStocksRequest = new AddStocksRequest
         {
             Stocks = stocks,
             ErrorIfDuplicate = ErrorIfDuplicate,
         };
+        
+        var stockPrices = stocks.Zip(Stocks.Select(x => x.StartingPrice)).Select(p => new SetStockPriceRequest
+        {
+            StockId = p.First.StockId,
+            Price = p.Second,
+            SimulationStep = new SimulationStep(0),
+        }).ToArray();
+        
+        var setStockPricesRequest = new SetStockPricesRequest
+        {
+            StockPrices = stockPrices,
+        };
+        
+        return (addStocksRequest, setStockPricesRequest);
     }
 }

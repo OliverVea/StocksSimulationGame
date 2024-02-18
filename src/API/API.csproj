@@ -27,14 +27,5 @@
     <ItemGroup>
         <PackageReference Include="Meziantou.Analyzer" />
     </ItemGroup>
-    
-    <ItemGroup>
-      <None Update="Data\sqlite.db-shm">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Data\sqlite.db-wal">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-    </ItemGroup>
 
 </Project>

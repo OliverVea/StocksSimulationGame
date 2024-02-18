@@ -13,6 +13,7 @@ public static class ServiceExtensions
     {
         services.AddScoped<IStockStorageRepository, StockStorageRepository>();
         services.AddScoped<IStockPriceStorageRepository, StockPriceStorageRepository>();
+        services.AddScoped<ISimulationStepStorageRepository, SimulationStepStorageRepository>();
 
         services.AddSingleton(connection);
 
