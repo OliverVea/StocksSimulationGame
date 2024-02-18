@@ -12,6 +12,22 @@ namespace Persistence.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "StockPrices",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    StockId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    SimulationStep = table.Column<long>(type: "INTEGER", nullable: false),
+                    Price = table.Column<float>(type: "REAL", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StockPrices", x => x.Id);
+                    table.UniqueConstraint("AK_StockPrices_StockId_SimulationStep", x => new { x.StockId, x.SimulationStep });
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Stocks",
                 columns: table => new
                 {
@@ -26,6 +42,16 @@ namespace Persistence.Migrations
                 {
                     table.PrimaryKey("PK_Stocks", x => x.Id);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StockPrices_SimulationStep",
+                table: "StockPrices",
+                column: "SimulationStep");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StockPrices_StockId",
+                table: "StockPrices",
+                column: "StockId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Stocks_StockId",
@@ -43,6 +69,9 @@ namespace Persistence.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "StockPrices");
+
             migrationBuilder.DropTable(
                 name: "Stocks");
         }

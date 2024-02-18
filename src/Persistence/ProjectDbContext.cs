@@ -13,9 +13,18 @@ internal class ProjectDbContext(DbContextOptions<ProjectDbContext> options) : Db
             entity.HasIndex(e => e.StockId).IsUnique();
             entity.HasIndex(e => e.Ticker).IsUnique();
         });
+        
+        modelBuilder.Entity<StockPrice>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.HasAlternateKey(e => new { e.StockId, e.SimulationStep });
+            entity.HasIndex(e => e.StockId);
+            entity.HasIndex(e => e.SimulationStep);
+        });
 
         base.OnModelCreating(modelBuilder);
     }
 
     public required DbSet<Stock> Stocks { get; init; }
+    public required DbSet<StockPrice> StockPrices { get; init; }
 }

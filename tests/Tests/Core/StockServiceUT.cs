@@ -15,7 +15,6 @@ public class StockServiceUT : BaseUT<IStockService, StockService>
     {
         // Arrange
         var request = DataBuilder.AddStocksRequest().Create();
-        var expected = DataBuilder.AddStocksResponse().Create();
         var existingStocks = DataBuilder.ListStocksResponse()
             .With(x => x.Stocks, Array.Empty<ListStockResponse>())
             .Create();

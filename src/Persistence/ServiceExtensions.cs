@@ -12,6 +12,7 @@ public static class ServiceExtensions
     public static IServiceCollection AddPersistence(this IServiceCollection services, SqliteConnection connection)
     {
         services.AddScoped<IStockStorageRepository, StockStorageRepository>();
+        services.AddScoped<IStockPriceStorageRepository, StockPriceStorageRepository>();
 
         services.AddSingleton(connection);
 

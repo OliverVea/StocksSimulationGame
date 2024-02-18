@@ -47,6 +47,32 @@ namespace Persistence.Migrations
 
                     b.ToTable("Stocks");
                 });
+
+            modelBuilder.Entity("Persistence.Entities.StockPrice", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<float>("Price")
+                        .HasColumnType("REAL");
+
+                    b.Property<long>("SimulationStep")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid>("StockId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasAlternateKey("StockId", "SimulationStep");
+
+                    b.HasIndex("SimulationStep");
+
+                    b.HasIndex("StockId");
+
+                    b.ToTable("StockPrices");
+                });
 #pragma warning restore 612, 618
         }
     }

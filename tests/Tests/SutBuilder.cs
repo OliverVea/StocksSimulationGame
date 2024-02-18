@@ -9,13 +9,15 @@ public class SutBuilder<T> where T : class
     private ServiceProvider? _serviceProvider;
     private ServiceProvider ServiceProvider => _serviceProvider ??= BuildServiceProvider();
 
-    public void AddMock<TService>(Action<Mock<TService>>? setup = null) where TService : class
+    public Mock<TService> AddMock<TService>(Action<Mock<TService>>? setup = null) where TService : class
     {
         var mock = new Mock<TService>();
 
         setup?.Invoke(mock);
 
         _services.AddSingleton(mock.Object);
+
+        return mock;
     }
 
     public TService GetService<TService>() where TService : notnull
