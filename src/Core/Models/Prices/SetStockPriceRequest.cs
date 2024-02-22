@@ -6,5 +6,5 @@ public record SetStockPriceRequest
 {
     public required StockId StockId { get; init; }
     public required SimulationStep SimulationStep { get; init; }
-    public required float Price { get; init; }
+    public required Price Price { get; init; }
 }

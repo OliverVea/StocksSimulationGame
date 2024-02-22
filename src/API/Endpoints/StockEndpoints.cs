@@ -21,6 +21,7 @@ internal static class StockEndpoints
         groupBuilder.AddGetStocks();
         groupBuilder.AddAddStocks();
         groupBuilder.AddDeleteStocks();
+        groupBuilder.AddUpdateStocks();
     }
 
     private static void AddGetStocks(this IEndpointRouteBuilder endpoints)
@@ -54,10 +55,8 @@ internal static class StockEndpoints
             {
                 try
                 {
-                    var (addStocksRequest, setStockPricesRequest) = request.ToRequests();
-
+                    var addStocksRequest = request.ToRequests();
                     var stocks = await stockService.AddStocksAsync(addStocksRequest, cancellationToken);
-                    await stockPriceService.SetStockPricesAsync(setStockPricesRequest, cancellationToken);
 
                     var response = new AddStocksResponseModel(stocks);
                     return Results.Ok(response);
@@ -92,6 +91,28 @@ internal static class StockEndpoints
             }
         })
         .Produces<DeleteStocksResponseModel>()
+        .Produces<ErrorModel>(StatusCodes.Status400BadRequest);
+    }
+
+    private static void AddUpdateStocks(this IEndpointRouteBuilder endpoints)
+    {
+        endpoints.MapPatch(string.Empty, async (
+            [FromServices] IStockService stockService,
+            [FromBody] UpdateStocksRequestModel request,
+            CancellationToken cancellationToken) =>
+        {
+            try
+            {
+                var updateStocksRequest = request.ToRequest();
+                await stockService.UpdateStocksAsync(updateStocksRequest, cancellationToken);
+                return Results.Ok();
+            }
+            catch (Exception e)
+            {
+                var error = new ErrorModel(e.Message);
+                return Results.BadRequest(error);
+            }
+        }).Produces(200)
         .Produces<ErrorModel>(StatusCodes.Status400BadRequest);
     }
 }

@@ -9,5 +9,5 @@ public class StockPrice
     
     public required Guid StockId { get; init; }
     public required long SimulationStep { get; init; }
-    public required float Price { get; set; }
+    public required float Price { get; init; }
 }

@@ -14,6 +14,11 @@ internal static class ServiceExtensions
     
     internal static void ConfigureBuilder(this WebApplicationBuilder app, IConfiguration configuration)
     {
+        app.Services.AddLogging(c =>
+        {
+            c.AddConsole();
+        });
+        
         app.Services.AddEndpointsApiExplorer();
         
         app.Services.AddSwaggerGen(c =>

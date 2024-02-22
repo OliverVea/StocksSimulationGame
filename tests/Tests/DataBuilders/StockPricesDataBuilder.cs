@@ -5,19 +5,19 @@ namespace Tests.DataBuilders;
 
 public partial class DataBuilder
 {
-    public IPostprocessComposer<GetStockPricesRequest> GetStockPricesRequest()
+    public IPostprocessComposer<GetStockPriceInIntervalRequest> GetStockPricesRequest()
     {
-        return Fixture.Build<GetStockPricesRequest>();
+        return Fixture.Build<GetStockPriceInIntervalRequest>();
     }
     
-    public IPostprocessComposer<GetStockPricesResponse> GetStockPricesResponse(IEnumerable<GetStockPriceResponse> stockPrices)
+    public IPostprocessComposer<GetStockPriceInIntervalResponse> GetStockPricesResponse(IEnumerable<GetStockPriceResponse> stockPrices)
     {
         return GetStockPricesResponse().With(x => x.StockPrices, stockPrices);
     }
     
-    public IPostprocessComposer<GetStockPricesResponse> GetStockPricesResponse()
+    public IPostprocessComposer<GetStockPriceInIntervalResponse> GetStockPricesResponse()
     {
-        return Fixture.Build<GetStockPricesResponse>();
+        return Fixture.Build<GetStockPriceInIntervalResponse>();
     }
     
     public IPostprocessComposer<GetStockPriceResponse> GetStockPriceResponse()

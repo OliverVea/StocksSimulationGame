@@ -1,5 +1,4 @@
-﻿using Core.Models;
-using Core.Models.Ids;
+﻿using Core.Models.Ids;
 using Core.Models.Prices;
 using Core.Models.Stocks;
 
@@ -13,7 +12,7 @@ public sealed record AddStocksRequestModel
     /// <summary>
     /// The stocks to create.
     /// </summary>
-    public required AddStockRequestModel[] Stocks { get; init; }
+    public required IReadOnlyCollection<AddStockRequestModel> Stocks { get; init; }
     
     /// <summary>
     /// If true, an error will be thrown if a stock with the same ticker already exists.
@@ -52,7 +51,7 @@ public sealed record AddStocksRequestModel
         public required float Drift { get; init; }
     }
     
-    internal (AddStocksRequest, SetStockPricesRequest) ToRequests()
+    internal AddStocksRequest ToRequests()
     {
         var stocks = Stocks.Select(x => new AddStockRequest
         {
@@ -60,26 +59,13 @@ public sealed record AddStocksRequestModel
             Ticker = x.Ticker,
             Drift = x.Drift,
             Volatility = x.Volatility,
+            StartingPrice = new Price(x.StartingPrice),
         }).ToArray();
         
-        var addStocksRequest = new AddStocksRequest
+        return new AddStocksRequest
         {
             Stocks = stocks,
             ErrorIfDuplicate = ErrorIfDuplicate,
         };
-        
-        var stockPrices = stocks.Zip(Stocks.Select(x => x.StartingPrice)).Select(p => new SetStockPriceRequest
-        {
-            StockId = p.First.StockId,
-            Price = p.Second,
-            SimulationStep = new SimulationStep(0),
-        }).ToArray();
-        
-        var setStockPricesRequest = new SetStockPricesRequest
-        {
-            StockPrices = stockPrices,
-        };
-        
-        return (addStocksRequest, setStockPricesRequest);
     }
 }

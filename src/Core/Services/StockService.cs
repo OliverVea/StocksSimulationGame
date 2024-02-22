@@ -50,6 +50,20 @@ public sealed class StockService(IStockStorageRepository stockStorageRepository)
         return Map(request);
     }
 
+    public async Task<UpdateStocksResponse> UpdateStocksAsync(UpdateStocksRequest updateStocksRequest, CancellationToken cancellationToken)
+    {
+        var stockIds = updateStocksRequest.Stocks.Select(x => x.StockId).ToArray();
+        var listStocksRequest = new ListStocksWithIdsRequest { StockIds = stockIds };
+        var stocks = await ListStocksWithIdsAsync(listStocksRequest, cancellationToken);
+        
+        var missing = stockIds.Except(stocks.Stocks.Select(x => x.StockId)).ToArray();
+        if (missing.Any()) throw new InvalidOperationException("Tickets with the following ids do not exist: " + string.Join(", ", missing));
+        
+        await stockStorageRepository.UpdateStocksAsync(updateStocksRequest, cancellationToken);
+
+        return new UpdateStocksResponse();
+    }
+
     private static AddStocksRequest UpdateWithExisting(AddStocksRequest request, ListStocksResponse existingStocks)
     {
         var noDuplicates = existingStocks.Stocks.Count == 0;

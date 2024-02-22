@@ -26,7 +26,7 @@ public class StockPriceServiceUT : BaseUT<IStockPriceService, StockPriceService>
         MockGetStockPricesAsync(response);
         
         // Act
-        var actual = await Sut.GetStockPricesAsync(request, CancellationToken.None);
+        var actual = await Sut.GetStockPriceInIntervalAsync(request, CancellationToken.None);
         
         // Assert
         Assert.That(actual.StockPrices, Is.Empty);
@@ -43,7 +43,7 @@ public class StockPriceServiceUT : BaseUT<IStockPriceService, StockPriceService>
         MockGetStockPricesAsync(response);
         
         // Act
-        var actual = await Sut.GetStockPricesAsync(request, CancellationToken.None);
+        var actual = await Sut.GetStockPriceInIntervalAsync(request, CancellationToken.None);
         
         // Assert
         Assert.That(actual.StockPrices, Has.Count.EqualTo(1));
@@ -60,7 +60,7 @@ public class StockPriceServiceUT : BaseUT<IStockPriceService, StockPriceService>
         MockGetStockPricesAsync(response);
         
         // Act
-        var actual = await Sut.GetStockPricesAsync(request, CancellationToken.None);
+        var actual = await Sut.GetStockPriceInIntervalAsync(request, CancellationToken.None);
         
         // Assert
         Assert.That(actual.StockPrices, Has.Count.EqualTo(10));
@@ -79,12 +79,12 @@ public class StockPriceServiceUT : BaseUT<IStockPriceService, StockPriceService>
         VerifySetStockPricesAsync(x => Equals(x.StockPrices, request.StockPrices), Times.Once);
     }
     
-    private void MockGetStockPricesAsync(GetStockPricesResponse response)
+    private void MockGetStockPricesAsync(GetStockPriceInIntervalResponse inIntervalResponse)
     {
-        _stockPriceStorageRepositoryMock.Setup(x => x.GetStockPricesAsync(
-                It.IsAny<GetStockPricesRequest>(),
+        _stockPriceStorageRepositoryMock.Setup(x => x.GetStockPriceInIntervalAsync(
+                It.IsAny<GetStockPriceInIntervalRequest>(),
                 CancellationToken))
-            .ReturnsAsync(response);
+            .ReturnsAsync(inIntervalResponse);
     }
     
     private void VerifySetStockPricesAsync(Func<SetStockPricesRequest, bool> match, Func<Times> times)

@@ -1,4 +1,5 @@
 ﻿using Core.Models;
+using Core.Models.Ids;
 using Core.Models.Prices;
 using Core.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -8,7 +9,7 @@ namespace Persistence.Repositories;
 
 internal class StockPriceStorageRepository(IDbContext dbContext) : IStockPriceStorageRepository
 {
-    public async Task<GetStockPricesResponse> GetStockPricesAsync(GetStockPricesRequest request, CancellationToken cancellationToken)
+    public async Task<GetStockPriceInIntervalResponse> GetStockPriceInIntervalAsync(GetStockPriceInIntervalRequest request, CancellationToken cancellationToken)
     {
         var stockPrices = await dbContext.StockPrices
             .Where(x => x.StockId == request.StockId.Id)
@@ -16,9 +17,24 @@ internal class StockPriceStorageRepository(IDbContext dbContext) : IStockPriceSt
             .Select(x => Map(x))
             .ToArrayAsync(cancellationToken);
 
-        return new GetStockPricesResponse
+        return new GetStockPriceInIntervalResponse
         {
             StockId = request.StockId,
+            StockPrices = stockPrices,
+        };
+    }
+
+    public async Task<GetStockPricesForStepResponse> GetStockPricesForStepAsync(GetStockPricesForStepRequest request, CancellationToken cancellationToken)
+    {
+        var stockGuids = request.StockIds.Select(x => x.Id).ToArray();
+        
+        var stockPrices = await dbContext.StockPrices
+            .Where(x => stockGuids.Contains(x.StockId) && x.SimulationStep == request.SimulationStep.Step)
+            .Select(x => Map(x))
+            .ToArrayAsync(cancellationToken);
+
+        return new GetStockPricesForStepResponse
+        {
             StockPrices = stockPrices,
         };
     }
@@ -58,7 +74,7 @@ internal class StockPriceStorageRepository(IDbContext dbContext) : IStockPriceSt
     {
         return new StockPrice
         {
-            Price = request.Price,
+            Price = request.Price.Value,
             SimulationStep = request.SimulationStep.Step,
             StockId = request.StockId.Id,
         };
@@ -66,13 +82,8 @@ internal class StockPriceStorageRepository(IDbContext dbContext) : IStockPriceSt
     
     private static GetStockPriceResponse Map(StockPrice entity) => new()
     {
-        Step = new SimulationStep
-        {
-            Step = entity.SimulationStep,
-        },
-        Price = new Price
-        {
-            Value = entity.Price,
-        },
+        StockId = new StockId(entity.StockId),
+        Step = new SimulationStep(entity.SimulationStep),
+        Price = new Price(entity.Price),
     };
 }

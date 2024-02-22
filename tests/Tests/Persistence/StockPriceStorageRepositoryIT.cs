@@ -14,7 +14,7 @@ public class StockPriceStorageRepositoryIT : BaseIT<IStockPriceStorageRepository
         var request = DataBuilder.GetStockPricesRequest().With(x => x.StockId, stock.StockId).Create();
 
         // Act
-        var response = await Sut.GetStockPricesAsync(request, CancellationToken.None);
+        var response = await Sut.GetStockPriceInIntervalAsync(request, CancellationToken.None);
 
         // Assert
         Assert.That(response.StockPrices, Is.Empty);
@@ -32,7 +32,7 @@ public class StockPriceStorageRepositoryIT : BaseIT<IStockPriceStorageRepository
         
         // Act
         await Sut.SetStockPricesAsync(setStockPricesRequest, CancellationToken.None);
-        var response = await Sut.GetStockPricesAsync(getStockPricesRequest, CancellationToken.None);
+        var response = await Sut.GetStockPriceInIntervalAsync(getStockPricesRequest, CancellationToken.None);
 
         // Assert
         Assert.That(response.StockPrices, Has.Length.EqualTo(1));
@@ -50,7 +50,7 @@ public class StockPriceStorageRepositoryIT : BaseIT<IStockPriceStorageRepository
         
         // Act
         await Sut.SetStockPricesAsync(setStockPricesRequest, CancellationToken.None);
-        var response = await Sut.GetStockPricesAsync(getStockPricesRequest, CancellationToken.None);
+        var response = await Sut.GetStockPriceInIntervalAsync(getStockPricesRequest, CancellationToken.None);
 
         // Assert
         Assert.That(response.StockPrices, Has.Length.EqualTo(10));
@@ -69,7 +69,7 @@ public class StockPriceStorageRepositoryIT : BaseIT<IStockPriceStorageRepository
         
         // Act
         await Sut.SetStockPricesAsync(setStockPricesRequest, CancellationToken.None);
-        var response = await Sut.GetStockPricesAsync(getStockPricesRequest, CancellationToken.None);
+        var response = await Sut.GetStockPriceInIntervalAsync(getStockPricesRequest, CancellationToken.None);
 
         // Assert
         Assert.That(response.StockPrices, Has.Length.EqualTo(1));
@@ -89,7 +89,7 @@ public class StockPriceStorageRepositoryIT : BaseIT<IStockPriceStorageRepository
         // Act
         await Sut.SetStockPricesAsync(setStockPricesRequest, CancellationToken.None);
         await Sut.DeleteStockPricesAsync(deleteStockPricesRequest, CancellationToken.None);
-        var response = await Sut.GetStockPricesAsync(getStockPricesRequest, CancellationToken.None);
+        var response = await Sut.GetStockPriceInIntervalAsync(getStockPricesRequest, CancellationToken.None);
 
         // Assert
         Assert.That(response.StockPrices, Is.Empty);
@@ -112,8 +112,8 @@ public class StockPriceStorageRepositoryIT : BaseIT<IStockPriceStorageRepository
         // Act
         await Sut.SetStockPricesAsync(setStockPricesRequest, CancellationToken.None);
         await Sut.DeleteStockPricesAsync(deleteStockPricesRequest, CancellationToken.None);
-        var response1 = await Sut.GetStockPricesAsync(getStockPricesRequest1, CancellationToken.None);
-        var response2 = await Sut.GetStockPricesAsync(getStockPricesRequest2, CancellationToken.None);
+        var response1 = await Sut.GetStockPriceInIntervalAsync(getStockPricesRequest1, CancellationToken.None);
+        var response2 = await Sut.GetStockPriceInIntervalAsync(getStockPricesRequest2, CancellationToken.None);
 
         // Assert
         Assert.That(response1.StockPrices, Is.Empty);

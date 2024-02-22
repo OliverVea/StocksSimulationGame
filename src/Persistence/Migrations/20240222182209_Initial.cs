@@ -49,7 +49,8 @@ namespace Persistence.Migrations
                     StockId = table.Column<Guid>(type: "TEXT", nullable: false),
                     Ticker = table.Column<string>(type: "TEXT", maxLength: 16, nullable: false),
                     Volatility = table.Column<float>(type: "REAL", nullable: false),
-                    Drift = table.Column<float>(type: "REAL", nullable: false)
+                    Drift = table.Column<float>(type: "REAL", nullable: false),
+                    StartingPrice = table.Column<float>(type: "REAL", nullable: false)
                 },
                 constraints: table =>
                 {

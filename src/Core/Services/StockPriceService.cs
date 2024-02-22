@@ -5,9 +5,14 @@ namespace Core.Services;
 
 public class StockPriceService(IStockPriceStorageRepository stockPriceStorageRepository) : IStockPriceService
 {
-    public Task<GetStockPricesResponse> GetStockPricesAsync(GetStockPricesRequest request, CancellationToken cancellationToken)
+    public Task<GetStockPriceInIntervalResponse> GetStockPriceInIntervalAsync(GetStockPriceInIntervalRequest request, CancellationToken cancellationToken)
     {
-        return stockPriceStorageRepository.GetStockPricesAsync(request, cancellationToken);
+        return stockPriceStorageRepository.GetStockPriceInIntervalAsync(request, cancellationToken);
+    }
+
+    public Task<GetStockPricesForStepResponse> GetStockPricesForStepAsync(GetStockPricesForStepRequest request, CancellationToken cancellationToken)
+    {
+        return stockPriceStorageRepository.GetStockPricesForStepAsync(request, cancellationToken);
     }
 
     public Task SetStockPricesAsync(SetStockPricesRequest request, CancellationToken cancellationToken)

@@ -1,4 +1,5 @@
 ﻿using Core.Models.Ids;
+using Core.Models.Prices;
 using Core.Models.Stocks;
 using Core.Repositories;
 using Persistence.Entities;
@@ -50,8 +51,26 @@ internal class StockStorageRepository(IDbContext dbContext) : IStockStorageRepos
 
         await dbContext.SaveChangesAsync(cancellationToken);
     }
-    
-    
+
+    public Task UpdateStocksAsync(UpdateStocksRequest updateStocksRequest, CancellationToken cancellationToken)
+    {
+        var stockUpdateByGuid = updateStocksRequest.Stocks.ToDictionary(x => x.StockId.Id);
+        
+        var entities = dbContext.Stocks.Where(x => stockUpdateByGuid.Keys.Contains(x.StockId));
+        
+        foreach (var entity in entities)
+        {
+            var update = stockUpdateByGuid[entity.StockId];
+            
+            entity.Ticker = update.Ticker ?? entity.Ticker;
+            entity.Volatility = update.Volatility ?? entity.Volatility;
+            entity.Drift = update.Drift ?? entity.Drift;
+        }
+        
+        return dbContext.SaveChangesAsync(cancellationToken);
+    }
+
+
     private static ListStockResponse Map(Stock entity)
     {
         return new ListStockResponse
@@ -60,6 +79,7 @@ internal class StockStorageRepository(IDbContext dbContext) : IStockStorageRepos
             Ticker = entity.Ticker,
             Volatility = entity.Volatility,
             Drift = entity.Drift,
+            StartingPrice = new Price(entity.StartingPrice),
         };
     }
     
@@ -71,6 +91,7 @@ internal class StockStorageRepository(IDbContext dbContext) : IStockStorageRepos
             Ticker = stock.Ticker,
             Volatility = stock.Volatility,
             Drift = stock.Drift,
+            StartingPrice = stock.StartingPrice.Value,
         };
     }
 }

@@ -1,6 +1,4 @@
-﻿using Castle.Core.Configuration;
-using Microsoft.Data.Sqlite;
-using Microsoft.Extensions.Configuration.Memory;
+﻿using Microsoft.Extensions.Configuration.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using NUnit.Framework.Internal;

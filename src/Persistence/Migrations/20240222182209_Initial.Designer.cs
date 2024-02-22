@@ -11,7 +11,7 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(ProjectDbContext))]
-    [Migration("20240218175709_Initial")]
+    [Migration("20240222182209_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -41,6 +41,9 @@ namespace Persistence.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<float>("Drift")
+                        .HasColumnType("REAL");
+
+                    b.Property<float>("StartingPrice")
                         .HasColumnType("REAL");
 
                     b.Property<Guid>("StockId")

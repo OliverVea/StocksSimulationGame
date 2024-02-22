@@ -40,6 +40,9 @@ namespace Persistence.Migrations
                     b.Property<float>("Drift")
                         .HasColumnType("REAL");
 
+                    b.Property<float>("StartingPrice")
+                        .HasColumnType("REAL");
+
                     b.Property<Guid>("StockId")
                         .HasColumnType("TEXT");
 

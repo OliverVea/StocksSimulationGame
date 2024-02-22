@@ -2,7 +2,7 @@
 
 namespace Core.Models.Prices;
 
-public record GetStockPricesRequest
+public record GetStockPriceInIntervalRequest
 {
     public required StockId StockId { get; init; }
     public required SimulationStep From { get; init; }

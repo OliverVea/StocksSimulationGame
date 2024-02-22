@@ -8,4 +8,5 @@ public interface IStockService
     Task<ListStocksResponse> ListStocksWithIdsAsync(ListStocksWithIdsRequest request, CancellationToken cancellationToken);
     Task<DeleteStocksResponse> DeleteStocksAsync(DeleteStocksRequest request, CancellationToken cancellationToken);
     Task<AddStocksResponse> AddStocksAsync(AddStocksRequest request, CancellationToken cancellationToken);
+    Task<UpdateStocksResponse> UpdateStocksAsync(UpdateStocksRequest updateStocksRequest, CancellationToken cancellationToken);
 }

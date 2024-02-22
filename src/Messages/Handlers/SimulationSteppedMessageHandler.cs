@@ -1,12 +1,15 @@
 ﻿using Core.Messages;
+using Core.Services;
+using Microsoft.Extensions.Logging;
 
 namespace Messages.Handlers;
 
-public class SimulationSteppedMessageHandler
+public class SimulationSteppedMessageHandler(ILogger<SimulationSteppedMessageHandler> logger,
+    IStockPriceSteppingService stockPriceSteppingService)
 {
     public Task Handle(SimulationSteppedMessage message, CancellationToken cancellationToken)
     {
-        Console.WriteLine($"Simulation stepped: {message.SimulationStep.Step}");
-        return Task.CompletedTask;
+        logger.SimulationStepped(message.SimulationStep.Step);
+        return stockPriceSteppingService.OnSimulationSteppedAsync(message, cancellationToken);
     }
 }
