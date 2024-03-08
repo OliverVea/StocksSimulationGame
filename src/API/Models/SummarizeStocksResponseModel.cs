@@ -7,17 +7,17 @@ namespace API.Models;
 /// <summary>
 /// Contains a list of stocks.
 /// </summary>
-public class ListStocksResponseModel
+public class SummarizeStocksResponseModel
 {
     /// <summary>
-    /// Contains information about a stock.
+    /// Contains summaries of a stock.
     /// </summary>
-    [Required] public IReadOnlyCollection<ListStockResponseModel> Stocks { get; }
-    
+    [Required] public IReadOnlyCollection<SummarizeStockResponseModel> Stocks { get; }
+
     /// <summary>
-    /// Contains information about a stock.
+    /// Contains summaries of a stock.
     /// </summary>
-    public class ListStockResponseModel
+    public class SummarizeStockResponseModel
     {
         /// <summary>
         /// The unique identifier of the stock.
@@ -32,37 +32,22 @@ public class ListStocksResponseModel
         [Required] public string Ticker { get; }
         
         /// <summary>
-        /// The volatility of the stock.
-        /// </summary>
-        /// <example>0.05</example>
-        [Required] public float Volatility { get; }
-        
-        /// <summary>
-        /// The drift of the stock.
-        /// </summary>
-        /// <example>0.01</example>
-        [Required] public float Drift { get; }
-        
-        /// <summary>
         /// The price of the stock.
         /// </summary>
         /// <example>100</example>
         [Required] public float Price { get; }
         
-        internal ListStockResponseModel((ListStockResponse, GetStockPriceResponse) stocksResponse)
+        internal SummarizeStockResponseModel((ListStockResponse, GetStockPriceResponse) stocksResponse)
         {
             var (response, priceResponse) = stocksResponse;
             StockId = response.StockId.Id.ToString();
             Ticker = response.Ticker;
-            Volatility = response.Volatility;
-            Drift = response.Drift;
             Price = priceResponse.Price.Value;
         }
     }
-
-    internal ListStocksResponseModel(IEnumerable<(ListStockResponse, GetStockPriceResponse)> stocksResponse)
+    
+    internal SummarizeStocksResponseModel(IEnumerable<(ListStockResponse, GetStockPriceResponse)> stocksResponse)
     {
-        Stocks = stocksResponse.Select(x => new ListStockResponseModel(x)).ToArray();
+        Stocks = stocksResponse.Select(x => new SummarizeStockResponseModel(x)).ToArray();
     }
 }
-

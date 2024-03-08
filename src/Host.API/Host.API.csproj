@@ -4,6 +4,7 @@
         <InvariantGlobalization>true</InvariantGlobalization>
         <UserSecretsId>aspnet-API-30F42252-7F83-4AB6-B5AC-2A68DC0DC08E</UserSecretsId>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <RootNamespace>Host</RootNamespace>
     </PropertyGroup>
     
     <ItemGroup>

@@ -11,4 +11,4 @@ app.InstallMiddleware();
 
 await app.Services.MigrateAsync();
 
-app.Run();
+await app.RunAsync();

@@ -1,4 +1,5 @@
-﻿using Core.Models.Stocks;
+﻿using System.ComponentModel.DataAnnotations;
+using Core.Models.Stocks;
 
 namespace API.Models;
 
@@ -10,7 +11,7 @@ public class DeleteStocksResponseModel
     /// <summary>
     /// The unique identifiers of the deleted stocks.
     /// </summary>
-    public string[] Ids { get; }
+    [Required] public string[] Ids { get; }
 
     internal DeleteStocksResponseModel(DeleteStocksResponse response)
     {

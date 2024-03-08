@@ -1,17 +1,18 @@
-﻿using Core.Models.Ids;
+﻿using System.ComponentModel.DataAnnotations;
+using Core.Models.Ids;
 using Core.Models.Stocks;
 
 namespace API.Models;
 
 /// <summary>
-/// Updates t
+/// Updates stocks.
 /// </summary>
 public sealed record UpdateStocksRequestModel
 {
     /// <summary>
     /// The stocks to update
     /// </summary>
-    public required IReadOnlyCollection<UpdateStockRequestModel> Stocks { get; init; }
+    [Required] public required IReadOnlyCollection<UpdateStockRequestModel> Stocks { get; init; }
 
     /// <summary>
     /// The stock id to update
@@ -21,7 +22,7 @@ public sealed record UpdateStocksRequestModel
         /// <summary>
         /// The stock id to update
         /// </summary>
-        public required string StockId { get; init; }
+        [Required] public required string StockId { get; init; }
         
         /// <summary>
         /// The updated ticker. If null, the ticker will not be updated.
@@ -45,7 +46,7 @@ public sealed record UpdateStocksRequestModel
                 StockId = new StockId(Guid.Parse(StockId)),
                 Ticker = Ticker,
                 Volatility = Volatility,
-                Drift = Drift
+                Drift = Drift,
             };
         }
     }

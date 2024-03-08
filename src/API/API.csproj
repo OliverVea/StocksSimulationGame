@@ -1,9 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <UserSecretsId>8b10ecb1-c1c8-422e-b49e-50b206214825</UserSecretsId>
     </PropertyGroup>
     
     <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
         <PackageReference Include="Swashbuckle.AspNetCore" />
     </ItemGroup>
 

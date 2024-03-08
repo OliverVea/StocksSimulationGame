@@ -1,4 +1,6 @@
-﻿namespace API.Models;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace API.Models;
 
 /// <summary>
 /// Contains information about an error.
@@ -8,7 +10,7 @@ public class ErrorModel
     /// <summary>
     /// The error message.
     /// </summary>
-    public string Message { get; }
+    [Required] public string Message { get; }
     
     internal ErrorModel(string message)
     {

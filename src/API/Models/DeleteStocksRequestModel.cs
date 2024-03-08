@@ -1,4 +1,5 @@
-﻿using Core.Models.Ids;
+﻿using System.ComponentModel.DataAnnotations;
+using Core.Models.Ids;
 using Core.Models.Stocks;
 
 namespace API.Models;
@@ -11,12 +12,12 @@ public class DeleteStocksRequestModel
     /// <summary>
     /// The unique identifiers of the stocks to delete.
     /// </summary>
-    public required string[] StockIds { get; init; }
+    [Required] public required string[] StockIds { get; init; }
     
     /// <summary>
     /// Whether to return an error if any of the stocks are missing.
     /// </summary>
-    public required bool ErrorIfMissing { get; init; }
+    [Required] public required bool ErrorIfMissing { get; init; }
 
     internal DeleteStocksRequest ToRequest()
     {

@@ -1,4 +1,5 @@
-﻿using Core.Models.Stocks;
+﻿using System.ComponentModel.DataAnnotations;
+using Core.Models.Stocks;
 
 namespace API.Models;
 
@@ -10,7 +11,7 @@ public class AddStocksResponseModel
     /// <summary>
     /// The stocks that were added.
     /// </summary>
-    public AddStockResponseModel[] Stocks { get; }
+    [Required] public AddStockResponseModel[] Stocks { get; }
 
     /// <summary>
     /// Contains information about a stock that was added.
@@ -21,13 +22,13 @@ public class AddStocksResponseModel
         /// The unique identifier of the stock.
         /// </summary>
         /// <example>{9c79fb22-b4c2-4076-bc74-450c460287ad}</example>
-        public string StockId { get; }
+        [Required] public string StockId { get; }
         
         /// <summary>
         /// The ticker symbol of the stock.
         /// </summary>
         /// <example>GME</example>
-        public string Ticker { get; }
+        [Required] public string Ticker { get; }
         
         internal AddStockResponseModel(AddStockResponse response)
         {

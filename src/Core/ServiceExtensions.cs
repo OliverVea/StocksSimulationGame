@@ -14,6 +14,7 @@ public static class ServiceExtensions
         services.AddScoped<ISimulationSteppingService, SimulationSteppingService>();
         services.AddScoped<IRandomService, RandomService>();
         services.AddScoped<IStockPriceSteppingService, StockPriceSteppingService>();
+        services.AddScoped<IUserIdService, UserIdService>();
         
         services.AddHostedService<SimulationSteppingJob>();
 
