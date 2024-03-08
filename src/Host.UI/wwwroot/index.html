@@ -9,6 +9,7 @@
 
     <script src="/src/index.ts" type="module"></script>
     <script src="/src/components/stockSummaryTable.ts" type="module"></script>
+    <script src="/src/components/stockPriceChart.ts" type="module"></script>
 </head>
 
 <body>
@@ -21,10 +22,12 @@
     </div>
 
     <div class="content grid-container">
-        <div class="grid-item g2x2">2x2</div>
+        <div class="grid-item g2x2">
+            <stock-price-chart />
+        </div>
         <div class="grid-item g1x1">1x1</div>
         <div class="grid-item g1x2">
-            <stock-summary-table>a</stock-summary-table>
+            <stock-summary-table />
         </div>
         <div class="grid-item g2x1">2x1</div>
     </div>

@@ -3,7 +3,7 @@ using Core.Models.Ids;
 using Core.Models.Prices;
 using Core.Models.Stocks;
 
-namespace API.Models;
+namespace API.Models.Stocks;
 
 /// <summary>
 /// Creates new stocks with the given parameters.

@@ -1,16 +1,16 @@
 ﻿using API.Models;
+using API.Models.Stocks;
 using Core.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 
-namespace API.Endpoints.v1;
+namespace API.Endpoints.Stocks.v1;
 
 internal static class DeleteStocks
 {
-    internal static void AddDeleteStocks(this IEndpointRouteBuilder endpoints)
-    {
+    internal static void AddDeleteStocks(this IEndpointRouteBuilder endpoints) =>
         endpoints.MapDelete(string.Empty, async (
                 [FromServices] IStockService stockService,
                 [FromBody] DeleteStocksRequestModel request,
@@ -33,5 +33,4 @@ internal static class DeleteStocks
             .Produces(StatusCodes.Status401Unauthorized)
             .Produces(StatusCodes.Status403Forbidden)
             .RequireAuthorization(Policies.Admin);
-    }
 }

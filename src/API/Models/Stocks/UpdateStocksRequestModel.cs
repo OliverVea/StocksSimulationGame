@@ -2,7 +2,7 @@
 using Core.Models.Ids;
 using Core.Models.Stocks;
 
-namespace API.Models;
+namespace API.Models.Stocks;
 
 /// <summary>
 /// Updates stocks.

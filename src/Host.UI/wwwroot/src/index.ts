@@ -1,4 +1,5 @@
 import AuthService from './services/authService';
+import TokenService from './services/tokenService';
 
 document.addEventListener('DOMContentLoaded', async () => {
     const login = document.getElementById('loginLink');
@@ -28,17 +29,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     };
 
-    login!.addEventListener('click', async () => {
-        await AuthService.login().then(() => {
-            updateUI();
-        });
+    login?.addEventListener('click', async () => {
+        await AuthService.login();
+        await updateUI();
+        await TokenService.getToken();
     });
 
-    logout!.addEventListener('click', async () => {
-        await AuthService.logout().then(() => {
-            updateUI();
-        });
+    logout?.addEventListener('click', async () => {
+        await AuthService.logout();
+        await updateUI();
+        await TokenService.clearToken();
     });
 
     await updateUI();
 });
+

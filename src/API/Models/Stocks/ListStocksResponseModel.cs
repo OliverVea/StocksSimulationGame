@@ -2,7 +2,7 @@
 using Core.Models.Prices;
 using Core.Models.Stocks;
 
-namespace API.Models;
+namespace API.Models.Stocks;
 
 /// <summary>
 /// Contains a list of stocks.

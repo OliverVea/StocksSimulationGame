@@ -1,4 +1,5 @@
 ﻿using API.Models;
+using API.Models.Stocks;
 using Core.Models.Prices;
 using Core.Models.Stocks;
 using Core.Services;
@@ -7,13 +8,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 
-namespace API.Endpoints.v1;
+namespace API.Endpoints.Stocks.v1;
 
-internal static class GetStocks
+internal static class SummarizeStocks
 {
-    internal static void AddGetStocks(this IEndpointRouteBuilder endpoints)
-    {
-        endpoints.MapGet(string.Empty, async (
+    internal static void AddSummarizeStocks(this IEndpointRouteBuilder endpoints) =>
+        endpoints.MapGet("/summaries",  async (
                 [FromServices] IStockService stockService,
                 [FromServices] ISimulationInformationService simulationInformationService,
                 [FromServices] IStockPriceService stockPriceService,
@@ -32,7 +32,7 @@ internal static class GetStocks
                     
                     var stocksWithPrices = stocks.Stocks.Zip(prices.StockPrices, (stock, price) => (stock, price));
                     
-                    var response = new ListStocksResponseModel(stocksWithPrices);
+                    var response = new SummarizeStocksResponseModel(stocksWithPrices);
                     return Results.Ok(response);
                 }
                 catch (Exception e)
@@ -41,9 +41,5 @@ internal static class GetStocks
                     return Results.BadRequest(error);
                 }
             })
-            .Produces<ListStocksResponseModel>()
-            .Produces(StatusCodes.Status401Unauthorized)
-            .Produces(StatusCodes.Status403Forbidden)
-            .RequireAuthorization(Policies.Admin);
-    }
+            .Produces<SummarizeStocksResponseModel>();
 }

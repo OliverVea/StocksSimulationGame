@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Core.Models.Stocks;
 
-namespace API.Models;
+namespace API.Models.Stocks;
 
 /// <summary>
 /// Contains information about stocks that were added.

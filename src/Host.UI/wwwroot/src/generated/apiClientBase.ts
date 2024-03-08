@@ -1,23 +1,29 @@
-export class IConfig {
-  getAuthorization: () => "the-authentication-token";
+export interface IApiConfiguration {
+  baseUrl: string;
+  bearerToken: string | undefined;
 }
 
 export class AuthorizedApiBase {
-  private readonly config: IConfig;
+  config: IApiConfiguration;
 
-  protected constructor(config: IConfig) {
+  protected constructor(config: IApiConfiguration) {
     this.config = config;
   }
 
   protected getBaseUrl = (): string => {
-    return "a";
-  }
+    return this.config.baseUrl;
+  };
 
   protected transformOptions = (options: RequestInit): Promise<RequestInit> => {
+    if (this.config.bearerToken === undefined) {
+      return Promise.resolve(options);
+    }
+
     options.headers = {
       ...options.headers,
-      Authorization: this.config.getAuthorization(),
+      Authorization: `Bearer ${this.config.bearerToken}`,
     };
+
     return Promise.resolve(options);
   };
 }

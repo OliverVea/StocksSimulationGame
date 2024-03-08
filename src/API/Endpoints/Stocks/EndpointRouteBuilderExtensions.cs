@@ -1,19 +1,20 @@
-﻿using API.Endpoints.v1;
+﻿using API.Endpoints.Stocks.v1;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
-namespace API.Endpoints;
+namespace API.Endpoints.Stocks;
 
-internal static class StockEndpoints
+internal static class EndpointRouteBuilderExtensions
 {
-    private const string BasePath = "/api/Stocks";
+    private const string BasePath = "/Stocks";
+    private const string Tag = "Stocks";
     
     internal static void AddStockEndpoints(this IEndpointRouteBuilder endpoints)
     {
         var groupBuilder = endpoints.MapGroup(BasePath);
 
-        groupBuilder.WithTags("Stocks");
+        groupBuilder.WithTags(Tag);
         
         groupBuilder.AddGetStocks();
         groupBuilder.AddSummarizeStocks();

@@ -2,7 +2,7 @@
 using Core.Services;
 using Microsoft.AspNetCore.Http;
 
-namespace API.MiddleWare;
+namespace API.Middleware;
 
 [Obsolete("IUserIdService is recreated in request scope, undoing the initialization in the middleware")]
 internal class UserIdMiddleware(RequestDelegate next, IUserIdService userIdService)

@@ -11,9 +11,25 @@ internal class StockPriceStorageRepository(IDbContext dbContext) : IStockPriceSt
 {
     public async Task<GetStockPriceInIntervalResponse> GetStockPriceInIntervalAsync(GetStockPriceInIntervalRequest request, CancellationToken cancellationToken)
     {
-        var stockPrices = await dbContext.StockPrices
+        var baseQuery = dbContext.StockPrices
             .Where(x => x.StockId == request.StockId.Id)
-            .OrderByDescending(x => x.SimulationStep)
+            .Where(x => x.SimulationStep >= request.From.Step && x.SimulationStep <= request.To.Step)
+            .OrderBy(x => x.SimulationStep);
+        
+        var simulationSteps = await baseQuery
+            .Select(x => x.SimulationStep)
+            .ToListAsync(cancellationToken);
+
+        int sampleRate = Math.Max(1, simulationSteps.Count / request.DataPoints);
+
+        var sampledTimesteps = new List<long>();
+        for (int i = 0; i < simulationSteps.Count; i += sampleRate)
+        {
+            sampledTimesteps.Add(simulationSteps[i]);
+        }
+
+        var stockPrices = await baseQuery
+            .Where(x => sampledTimesteps.Contains(x.SimulationStep))
             .Select(x => Map(x))
             .ToArrayAsync(cancellationToken);
 

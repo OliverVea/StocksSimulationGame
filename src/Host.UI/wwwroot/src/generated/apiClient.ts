@@ -8,26 +8,27 @@
 /* eslint-disable */
 // ReSharper disable InconsistentNaming
 
-export class IConfig {
-  getAuthorization: () => "the-authentication-token";
-}
-
 export class AuthorizedApiBase {
-  private readonly config: IConfig;
+  config: IApiConfiguration;
 
-  protected constructor(config: IConfig) {
+  protected constructor(config: IApiConfiguration) {
     this.config = config;
   }
 
   protected getBaseUrl = (): string => {
-    return "a";
-  }
+    return this.config.baseUrl;
+  };
 
   protected transformOptions = (options: RequestInit): Promise<RequestInit> => {
+    if (this.config.bearerToken === undefined) {
+      return Promise.resolve(options);
+    }
+
     options.headers = {
       ...options.headers,
-      Authorization: this.config.getAuthorization(),
+      Authorization: `Bearer ${this.config.bearerToken}`,
     };
+
     return Promise.resolve(options);
   };
 }
@@ -37,10 +38,71 @@ export class ApiClient extends AuthorizedApiBase {
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
-    constructor(configuration: IConfig, baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+    constructor(configuration: IApiConfiguration, baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
         super(configuration);
         this.http = http ? http : window as any;
         this.baseUrl = this.getBaseUrl("", baseUrl);
+    }
+
+    /**
+     * @param from (optional) 
+     * @param to (optional) 
+     * @return Success
+     */
+    apiPriceHistory(stockId: string, from: number | undefined, to: number | undefined): Promise<GetPriceHistoryResponseModel> {
+        let url_ = this.baseUrl + "/api/PriceHistory/{stockId}?";
+        if (stockId === undefined || stockId === null)
+            throw new Error("The parameter 'stockId' must be defined.");
+        url_ = url_.replace("{stockId}", encodeURIComponent("" + stockId));
+        if (from === null)
+            throw new Error("The parameter 'from' cannot be null.");
+        else if (from !== undefined)
+            url_ += "from=" + encodeURIComponent("" + from) + "&";
+        if (to === null)
+            throw new Error("The parameter 'to' cannot be null.");
+        else if (to !== undefined)
+            url_ += "to=" + encodeURIComponent("" + to) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.processApiPriceHistory(_response);
+        });
+    }
+
+    protected processApiPriceHistory(response: Response): Promise<GetPriceHistoryResponseModel> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as GetPriceHistoryResponseModel;
+            return result200;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            result400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as ErrorModel;
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<GetPriceHistoryResponseModel>(null as any);
     }
 
     /**
@@ -72,6 +134,14 @@ export class ApiClient extends AuthorizedApiBase {
             let result200: any = null;
             result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as ListStocksResponseModel;
             return result200;
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            });
+        } else if (status === 403) {
+            return response.text().then((_responseText) => {
+            return throwException("Forbidden", status, _responseText, _headers);
             });
         } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
@@ -121,6 +191,14 @@ export class ApiClient extends AuthorizedApiBase {
             result400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as ErrorModel;
             return throwException("Bad Request", status, _responseText, _headers, result400);
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            });
+        } else if (status === 403) {
+            return response.text().then((_responseText) => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            });
         } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
@@ -169,6 +247,14 @@ export class ApiClient extends AuthorizedApiBase {
             result400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as ErrorModel;
             return throwException("Bad Request", status, _responseText, _headers, result400);
             });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            });
+        } else if (status === 403) {
+            return response.text().then((_responseText) => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            });
         } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
@@ -213,6 +299,14 @@ export class ApiClient extends AuthorizedApiBase {
             let result400: any = null;
             result400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as ErrorModel;
             return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            });
+        } else if (status === 403) {
+            return response.text().then((_responseText) => {
+            return throwException("Forbidden", status, _responseText, _headers);
             });
         } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
@@ -316,6 +410,20 @@ export interface ErrorModel {
     readonly message: string;
 }
 
+/** Represents the response to a request to get the price history of a stock. */
+export interface GetPriceHistoryResponseModel {
+    /** The unique identifier of the stock. */
+    readonly stockId: string;
+    /** The first simulation step of the data.
+Can be higher than the "From" parameter of the request. */
+    readonly from: number;
+    /** The last simulation step of the data.
+Can be lower than the "To" parameter of the request. */
+    readonly to: number;
+    /** The price history of the stock. */
+    readonly prices: PriceHistoryEntryModel[];
+}
+
 /** Contains information about a stock. */
 export interface ListStockResponseModel {
     /** The unique identifier of the stock. */
@@ -334,6 +442,14 @@ export interface ListStockResponseModel {
 export interface ListStocksResponseModel {
     /** Contains information about a stock. */
     readonly stocks: ListStockResponseModel[];
+}
+
+/** Represents an entry in the price history of a stock. */
+export interface PriceHistoryEntryModel {
+    /** The simulation step of the price. */
+    readonly step: number;
+    /** The price of the stock at the simulation step. */
+    readonly price: number;
 }
 
 /** Contains summaries of a stock. */
@@ -364,7 +480,7 @@ export interface UpdateStockRequestModel {
     drift?: number | undefined;
 }
 
-/** Updates t */
+/** Updates stocks. */
 export interface UpdateStocksRequestModel {
     /** The stocks to update */
     stocks: UpdateStockRequestModel[];
@@ -399,4 +515,9 @@ function throwException(message: string, status: number, response: string, heade
         throw result;
     else
         throw new ApiException(message, status, response, headers, null);
+}
+
+export interface IApiConfiguration {
+  baseUrl: string;
+  bearerToken: string | undefined;
 }

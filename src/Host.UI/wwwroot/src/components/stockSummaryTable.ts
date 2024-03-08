@@ -1,4 +1,4 @@
-import { SummarizeStockResponseModel } from '../generated/api-client';
+import { SummarizeStockResponseModel } from '../generated/apiClient';
 import StocksService from '../services/stocksService';
 
 const template = document.createElement('template');
