@@ -3,4 +3,5 @@
 public enum PersistenceProvider
 {
     Sqlite,
+    Aspire
 }

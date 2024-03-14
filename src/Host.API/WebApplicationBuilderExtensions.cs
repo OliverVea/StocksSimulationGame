@@ -10,11 +10,16 @@ internal static class WebApplicationBuilderExtensions
     
     internal static void ConfigureBuilder(this WebApplicationBuilder app, IConfiguration configuration)
     {
-        app.AddApi();
-        app.Services.AddMessages(app.Host);
-        app.Services.AddCore();
-        app.Services.AddPersistence(configuration);
+        app.AddServiceDefaults();
         
-        app.Services.AddLogging(c => c.AddConsole());
+        app.AddApi();
+        app.Services.AddCore();
+        app.AddMessages();
+        app.AddPersistence(configuration);
+    }
+
+    private static void ConfigureLogging(ILoggingBuilder loggingBuilder)
+    {
+        loggingBuilder.AddConsole();
     }
 }

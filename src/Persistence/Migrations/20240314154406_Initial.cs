@@ -15,9 +15,9 @@ namespace Persistence.Migrations
                 name: "CurrentSimulationSteps",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    SimulationStep = table.Column<long>(type: "INTEGER", nullable: false)
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    SimulationStep = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -28,11 +28,11 @@ namespace Persistence.Migrations
                 name: "StockPrices",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    StockId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    SimulationStep = table.Column<long>(type: "INTEGER", nullable: false),
-                    Price = table.Column<float>(type: "REAL", nullable: false)
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    StockId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SimulationStep = table.Column<long>(type: "bigint", nullable: false),
+                    Price = table.Column<float>(type: "real", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -44,13 +44,13 @@ namespace Persistence.Migrations
                 name: "Stocks",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    StockId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Ticker = table.Column<string>(type: "TEXT", maxLength: 16, nullable: false),
-                    Volatility = table.Column<float>(type: "REAL", nullable: false),
-                    Drift = table.Column<float>(type: "REAL", nullable: false),
-                    StartingPrice = table.Column<float>(type: "REAL", nullable: false)
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    StockId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Ticker = table.Column<string>(type: "nvarchar(16)", maxLength: 16, nullable: false),
+                    Volatility = table.Column<float>(type: "real", nullable: false),
+                    Drift = table.Column<float>(type: "real", nullable: false),
+                    StartingPrice = table.Column<float>(type: "real", nullable: false)
                 },
                 constraints: table =>
                 {

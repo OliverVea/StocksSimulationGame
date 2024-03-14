@@ -5,9 +5,13 @@
         <UserSecretsId>aspnet-API-30F42252-7F83-4AB6-B5AC-2A68DC0DC08E</UserSecretsId>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         <RootNamespace>Host</RootNamespace>
+        <InvariantGlobalization>false</InvariantGlobalization>
     </PropertyGroup>
     
     <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
+        <PackageReference Include="Microsoft.Data.Sqlite.Core" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" />
     </ItemGroup>
 

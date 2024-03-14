@@ -51,7 +51,7 @@ mkcert -install
 Create a `certs` directory in the root of the project and navigate to it:
 
 ```bash
-mkdir certs && cd certs
+mkdir certs
 ```
 
 ```bash

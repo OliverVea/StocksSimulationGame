@@ -1,9 +1,13 @@
-﻿using Core.Repositories;
+﻿using Aspire.ServiceDefaults;
+using Core.Repositories;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Persistence.Configuration;
 using Persistence.Repositories;
 
@@ -11,19 +15,19 @@ namespace Persistence;
 
 public static class ServiceExtensions
 {
-    public static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration)
+    public static WebApplicationBuilder AddPersistence(this WebApplicationBuilder builder, IConfiguration configuration)
     {
         var persistenceConfiguration = configuration.GetSection(PersistenceConfiguration.SectionName).Get<PersistenceConfiguration>();
         if (persistenceConfiguration is null) throw new InvalidOperationException("Persistence configuration is missing");
 
-        services.AddProvider(persistenceConfiguration);
-        services.AddSingleton(persistenceConfiguration);
-        services.AddScoped<IStockStorageRepository, StockStorageRepository>();
-        services.AddScoped<IStockPriceStorageRepository, StockPriceStorageRepository>();
-        services.AddScoped<ISimulationStepStorageRepository, SimulationStepStorageRepository>();
-        services.AddScoped<IDbContext>(provider => provider.GetRequiredService<ProjectDbContext>());
+        builder.AddProvider(persistenceConfiguration);
+        builder.Services.AddSingleton(persistenceConfiguration);
+        builder.Services.AddScoped<IStockStorageRepository, StockStorageRepository>();
+        builder.Services.AddScoped<IStockPriceStorageRepository, StockPriceStorageRepository>();
+        builder.Services.AddScoped<ISimulationStepStorageRepository, SimulationStepStorageRepository>();
+        builder.Services.AddScoped<IDbContext>(provider => provider.GetRequiredService<ProjectDbContext>());
 
-        return services;
+        return builder;
     }
     
     private static void AddWarnings(this DbContextOptionsBuilder options)
@@ -38,30 +42,54 @@ public static class ServiceExtensions
         });
     }
 
-    private static IServiceCollection AddProvider(this IServiceCollection services, PersistenceConfiguration configuration)
+    private static WebApplicationBuilder AddProvider(this WebApplicationBuilder builder, PersistenceConfiguration configuration)
     {
+        builder.AddAspire();
+        
+        /*
         return configuration.Provider switch
         {
-            PersistenceProvider.Sqlite => services.AddSqlite(configuration),
+            PersistenceProvider.Sqlite => builder.AddSqlite(configuration),
+            PersistenceProvider.Aspire => builder.AddAspire(),
             _ => throw new InvalidOperationException("Unsupported persistence provider")
         };
+        */
+
+        return builder;
     }
     
-    private static IServiceCollection AddSqlite(
-        this IServiceCollection services,
+    private static WebApplicationBuilder AddSqlite(
+        this WebApplicationBuilder builder,
         PersistenceConfiguration persistenceConfiguration)
     {
         if (persistenceConfiguration.Sqlite is null) throw new InvalidOperationException("Sqlite configuration is missing");
         
-        services.AddSingleton(persistenceConfiguration.Sqlite.Connection);
+        builder.Services.AddSingleton(persistenceConfiguration.Sqlite.Connection);
         
-        services.AddDbContext<ProjectDbContext>(options =>
+        builder.Services.AddDbContext<ProjectDbContext>(options =>
         {
             options.AddWarnings();
-            options.UseSqlite(persistenceConfiguration.Sqlite.Connection);
+            options.UseSqlite(persistenceConfiguration.Sqlite.Connection, ConfigureSqlite);
         });
         
-        return services;
+        return builder;
+    }
+
+    private static WebApplicationBuilder AddAspire(
+        this WebApplicationBuilder builder)
+    {
+        builder.AddSqlServerDbContext<ProjectDbContext>(Constants.StocksDatabase, c =>
+        {
+        }, o =>
+        {
+        });
+
+        return builder;
+    }
+
+    private static void ConfigureSqlite(SqliteDbContextOptionsBuilder options)
+    {
+        options.MigrationsAssembly(typeof(ProjectDbContext).Assembly.FullName);
     }
 
     public static async Task EnsureCreatedAsync(this IServiceProvider serviceProvider)

@@ -4,12 +4,12 @@
     </ItemGroup>
     
     <ItemGroup>
+        <PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.SqlServer" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
+        <PackageReference Include="Microsoft.Data.Sqlite.Core" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
         <PackageReference Include="Microsoft.Extensions.Configuration.Binder" />
-    </ItemGroup>
-    
-    <ItemGroup>
-      <Folder Include="Migrations\" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" />
     </ItemGroup>
 </Project>

@@ -1,16 +1,16 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 using Wolverine;
 
 namespace Messages;
 
 public static class ServiceExtensions
 {
-    public static IServiceCollection AddMessages(this IServiceCollection services, IHostBuilder builder)
+    public static WebApplicationBuilder AddMessages(this WebApplicationBuilder builder)
     {
-        services.AddSingleton<Core.Messages.IMessageBus, MessageBus>();
-        builder.UseWolverine();
+        builder.Services.AddSingleton<Core.Messages.IMessageBus, MessageBus>();
+        builder.Host.UseWolverine();
 
-        return services;
+        return builder;
     }
 }

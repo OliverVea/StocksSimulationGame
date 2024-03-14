@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build --outDir ../wwwroot",
     "serve": "vite preview",
     "generate-api": "nswag run src/generated/api-client.config.nswag.json /variables:Configuration=Debug"
   },

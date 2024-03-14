@@ -6,7 +6,7 @@ class ApiClientService {
     const token = await TokenService.getToken();
 
     const apiClient = new ApiClient.ApiClient({
-      baseUrl: "https://localhost:7066",
+      baseUrl: __API_URL__,
       bearerToken: token,
     });
 

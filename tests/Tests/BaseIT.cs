@@ -37,8 +37,6 @@ public abstract class BaseIT<TSut> where TSut : notnull
         
         var configuration = configurationBuilder.Build();
 
-        services.AddPersistence(configuration);
-
         _services = services.BuildServiceProvider();
 
         await _services.EnsureCreatedAsync();

@@ -15,12 +15,23 @@ template.innerHTML = `
         }
 
         .chart-container canvas {
-            width: 100% !important;
-            height: 100% !important;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .Refresh {
+            position: absolute;
+            top: 0;
+            right: 0;
         }
     </style>
+    <link href="src/components/stockPriceChart.css" rel="stylesheet" type="text/css">  
     <div class="chart-container">
         <canvas id="myChart"></canvas>
+        <button id="refresh">Refresh</button>
     </div>
 `;
 
@@ -84,7 +95,7 @@ class StockPriceChart extends HTMLElement {
 
         this.refresh();
 
-        setInterval(() => this.refresh(), 1000);
+        setInterval(() => this.refresh(), 15000);
     }
 
     private async refresh() {
@@ -102,14 +113,16 @@ class StockPriceChart extends HTMLElement {
                     }),
                     borderColor: 'rgb(255, 99, 132)',
                     borderWidth: 1,
-                    fill: false
+                    fill: false,
+                    tension: 0.1
                 });
             }
 
             this.chart.data.datasets[i].data = stockPrice.prices.map(entry => {
                 return {
                     x: entry.timestep,
-                    y: entry.price
+                    y: entry.price,
+                    r: 5
                 };
             });
             

@@ -1,6 +1,0 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
-  <PropertyGroup>
-    <RootNamespace>UI</RootNamespace>
-    <UserSecretsId>ae1f8620-9541-45bb-b723-4acf9dbf8581</UserSecretsId>
-  </PropertyGroup>
-</Project>
