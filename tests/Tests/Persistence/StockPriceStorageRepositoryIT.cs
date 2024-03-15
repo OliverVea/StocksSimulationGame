@@ -11,7 +11,7 @@ public class StockPriceStorageRepositoryIT : BaseIT<IStockPriceStorageRepository
     {
         // Arrange
         var stock = DataBuilder.AddStockRequest().Create();
-        var request = DataBuilder.GetStockPricesRequest().With(x => x.StockId, stock.StockId).Create();
+        var request = DataBuilder.GetStockPriceInIntervalRequest().With(x => x.StockId, stock.StockId).Create();
 
         // Act
         var response = await Sut.GetStockPriceInIntervalAsync(request, CancellationToken.None);
@@ -28,7 +28,7 @@ public class StockPriceStorageRepositoryIT : BaseIT<IStockPriceStorageRepository
         var stockPrice = DataBuilder.SetStockPriceRequest().With(x => x.StockId, stockId).Create();
         var setStockPricesRequest = DataBuilder.SetStockPricesRequest().With(x => x.StockPrices, [stockPrice]).Create();
 
-        var getStockPricesRequest = DataBuilder.GetStockPricesRequest().With(x => x.StockId, stockId).Create();
+        var getStockPricesRequest = DataBuilder.GetStockPriceInIntervalRequest().With(x => x.StockId, stockId).Create();
         
         // Act
         await Sut.SetStockPricesAsync(setStockPricesRequest, CancellationToken.None);
@@ -46,7 +46,7 @@ public class StockPriceStorageRepositoryIT : BaseIT<IStockPriceStorageRepository
         var stockPrices = DataBuilder.SetStockPriceRequest().With(x => x.StockId, stockId).CreateMany(10).ToArray();
         var setStockPricesRequest = DataBuilder.SetStockPricesRequest().With(x => x.StockPrices, stockPrices).Create();
 
-        var getStockPricesRequest = DataBuilder.GetStockPricesRequest().With(x => x.StockId, stockId).Create();
+        var getStockPricesRequest = DataBuilder.GetStockPriceInIntervalRequest().With(x => x.StockId, stockId).Create();
         
         // Act
         await Sut.SetStockPricesAsync(setStockPricesRequest, CancellationToken.None);
@@ -65,7 +65,7 @@ public class StockPriceStorageRepositoryIT : BaseIT<IStockPriceStorageRepository
         var stockPrice1 = DataBuilder.SetStockPriceRequest().With(x => x.StockId, stock1.StockId).Create();
         var stockPrice2 = DataBuilder.SetStockPriceRequest().With(x => x.StockId, stock2.StockId).Create();
         var setStockPricesRequest = DataBuilder.SetStockPricesRequest().With(x => x.StockPrices, [stockPrice1, stockPrice2]).Create();
-        var getStockPricesRequest = DataBuilder.GetStockPricesRequest().With(x => x.StockId, stock1.StockId).Create();
+        var getStockPricesRequest = DataBuilder.GetStockPriceInIntervalRequest().With(x => x.StockId, stock1.StockId).Create();
         
         // Act
         await Sut.SetStockPricesAsync(setStockPricesRequest, CancellationToken.None);
@@ -84,7 +84,7 @@ public class StockPriceStorageRepositoryIT : BaseIT<IStockPriceStorageRepository
         var deleteStockPrice = DataBuilder.DeleteStockPriceRequest().With(x => x.StockId, stockId).Create();
         var setStockPricesRequest = DataBuilder.SetStockPricesRequest().With(x => x.StockPrices, [setStockPrice]).Create();
         var deleteStockPricesRequest = DataBuilder.DeleteStockPricesRequest().With(x => x.StockPrices, [deleteStockPrice]).Create();
-        var getStockPricesRequest = DataBuilder.GetStockPricesRequest().With(x => x.StockId, stockId).Create();
+        var getStockPricesRequest = DataBuilder.GetStockPriceInIntervalRequest().With(x => x.StockId, stockId).Create();
         
         // Act
         await Sut.SetStockPricesAsync(setStockPricesRequest, CancellationToken.None);
@@ -106,8 +106,8 @@ public class StockPriceStorageRepositoryIT : BaseIT<IStockPriceStorageRepository
         var deleteStockPrice1 = DataBuilder.DeleteStockPriceRequest().With(x => x.StockId, stockId1).Create();
         var setStockPricesRequest = DataBuilder.SetStockPricesRequest().With(x => x.StockPrices, [setStockPrice1, setStockPrice2]).Create();
         var deleteStockPricesRequest = DataBuilder.DeleteStockPricesRequest().With(x => x.StockPrices, [deleteStockPrice1]).Create();
-        var getStockPricesRequest1 = DataBuilder.GetStockPricesRequest().With(x => x.StockId, stockId1).Create();
-        var getStockPricesRequest2 = DataBuilder.GetStockPricesRequest().With(x => x.StockId, stockId2).Create();
+        var getStockPricesRequest1 = DataBuilder.GetStockPriceInIntervalRequest().With(x => x.StockId, stockId1).Create();
+        var getStockPricesRequest2 = DataBuilder.GetStockPriceInIntervalRequest().With(x => x.StockId, stockId2).Create();
         
         // Act
         await Sut.SetStockPricesAsync(setStockPricesRequest, CancellationToken.None);

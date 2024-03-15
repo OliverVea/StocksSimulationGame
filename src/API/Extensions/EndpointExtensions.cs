@@ -1,5 +1,7 @@
 ﻿using API.Endpoints.PriceHistory;
+using API.Endpoints.SimulationInformation;
 using API.Endpoints.Stocks;
+using API.Endpoints.User;
 using Microsoft.AspNetCore.Builder;
 
 namespace API.Extensions;
@@ -16,7 +18,9 @@ internal static class EndpointExtensions
     {
         var groupBuilder = app.MapGroup(BasePath);
         
+        groupBuilder.AddSimulationInformationEndpoints();
         groupBuilder.AddStockEndpoints();
         groupBuilder.AddPriceHistoryEndpoints();
+        groupBuilder.AddUserEndpoints();
     }
 }

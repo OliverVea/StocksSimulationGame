@@ -4,7 +4,7 @@ using Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.ConfigureBuilder(builder.Configuration);
+builder.ConfigureBuilder();
 
 var app = builder.Build();
 

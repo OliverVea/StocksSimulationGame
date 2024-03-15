@@ -2,4 +2,10 @@
     <ItemGroup>
         <ProjectReference Include="../../aspire/Aspire.ServiceDefaults/Aspire.ServiceDefaults.csproj" />
     </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Exceptions\" />
+    </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="OneOf" />
+    </ItemGroup>
 </Project>

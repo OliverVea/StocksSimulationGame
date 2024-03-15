@@ -1,13 +1,16 @@
-﻿using AutoFixture.Dsl;
+﻿using AutoFixture;
+using AutoFixture.Dsl;
 using Core.Models.Prices;
 
 namespace Tests.DataBuilders;
 
 public partial class DataBuilder
 {
-    public IPostprocessComposer<GetStockPriceInIntervalRequest> GetStockPricesRequest()
+    public IPostprocessComposer<GetStockPriceInIntervalRequest> GetStockPriceInIntervalRequest()
     {
-        return Fixture.Build<GetStockPriceInIntervalRequest>();
+        return Fixture.Build<GetStockPriceInIntervalRequest>()
+            .With(x => x.From, SimulationStep(0).Create())
+            .With(x => x.To, SimulationStep(int.MaxValue).Create());
     }
     
     public IPostprocessComposer<GetStockPriceInIntervalResponse> GetStockPricesResponse(IEnumerable<GetStockPriceResponse> stockPrices)

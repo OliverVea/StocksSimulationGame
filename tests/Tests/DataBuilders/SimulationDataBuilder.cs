@@ -9,4 +9,9 @@ public partial class DataBuilder
     {
         return Fixture.Build<SimulationStep>();
     }
+    
+    public IPostprocessComposer<SimulationStep> SimulationStep(int step)
+    {
+        return SimulationStep().With(x => x.Step, step);
+    }
 }

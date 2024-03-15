@@ -1,4 +1,5 @@
-﻿using Core.Models.Ids;
+﻿using Core.Models;
+using Core.Models.Ids;
 using Core.Models.Prices;
 using Core.Models.Stocks;
 using Core.Repositories;
@@ -80,6 +81,7 @@ internal class StockStorageRepository(IDbContext dbContext) : IStockStorageRepos
             Volatility = entity.Volatility,
             Drift = entity.Drift,
             StartingPrice = new Price(entity.StartingPrice),
+            Color = new Color(entity.Red, entity.Green, entity.Blue),
         };
     }
     
@@ -92,6 +94,9 @@ internal class StockStorageRepository(IDbContext dbContext) : IStockStorageRepos
             Volatility = stock.Volatility,
             Drift = stock.Drift,
             StartingPrice = stock.StartingPrice.Value,
+            Red = stock.Color.Red,
+            Green = stock.Color.Green,
+            Blue = stock.Color.Blue,
         };
     }
 }

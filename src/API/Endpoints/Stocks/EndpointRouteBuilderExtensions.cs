@@ -7,7 +7,7 @@ namespace API.Endpoints.Stocks;
 
 internal static class EndpointRouteBuilderExtensions
 {
-    private const string BasePath = "/Stocks";
+    private const string BasePath = "/stocks";
     private const string Tag = "Stocks";
     
     internal static void AddStockEndpoints(this IEndpointRouteBuilder endpoints)

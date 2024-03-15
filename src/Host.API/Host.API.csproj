@@ -19,7 +19,6 @@
         <ProjectReference Include="../Core/Core.csproj" />
         <ProjectReference Include="../Persistence/Persistence.csproj" />
         <ProjectReference Include="../API/API.csproj" />
-        <ProjectReference Include="../Messages/Messages.csproj" />
     </ItemGroup>
 
 </Project>

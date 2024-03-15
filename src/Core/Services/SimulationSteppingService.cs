@@ -1,13 +1,14 @@
-﻿using Core.Messages;
+﻿namespace Core.Services;
 
-namespace Core.Services;
-
-public class SimulationSteppingService(IMessageBus messageBus, ISimulationInformationService simulationInformationService) : ISimulationSteppingService
+public class SimulationSteppingService(ISimulationInformationService simulationInformationService, IStockPriceSteppingService stockPriceSteppingService) : ISimulationSteppingService
 {
     public async Task StepSimulationAsync(CancellationToken cancellationToken)
     {
-        var newSimulationStep = await simulationInformationService.IncrementSimulationStepAsync(cancellationToken);
-        var message = new SimulationSteppedMessage(newSimulationStep);
-        await messageBus.PublishAsync(message, cancellationToken);
+        var currentSimulationStep = await simulationInformationService.GetCurrentSimulationStepAsync(cancellationToken);
+        var newSimulationStep = currentSimulationStep + 1;
+        
+        await stockPriceSteppingService.OnSimulationSteppedAsync(newSimulationStep, cancellationToken);
+        
+        await simulationInformationService.IncrementSimulationStepAsync(cancellationToken);
     }
 }

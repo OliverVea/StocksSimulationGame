@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Core.Models;
 using Core.Models.Ids;
 using Core.Models.Prices;
 using Core.Models.Stocks;
@@ -42,14 +43,20 @@ public sealed record AddStocksRequestModel
         /// <summary>
         /// The volatility of the stock.
         /// </summary>
-        /// <example>0.05</example>
+        /// <example>1.0</example>
         [Required] public required float Volatility { get; init; }
         
         /// <summary>
         /// The drift of the stock.
         /// </summary>
-        /// <example>0.01</example>
+        /// <example>0.25</example>
         [Required] public required float Drift { get; init; }
+        
+        /// <summary>
+        /// The color of the stock.
+        /// </summary>
+        /// <example>#007acc</example>
+        [Required] public required string Color { get; init; }
     }
     
     internal AddStocksRequest ToRequests()
@@ -61,6 +68,7 @@ public sealed record AddStocksRequestModel
             Drift = x.Drift,
             Volatility = x.Volatility,
             StartingPrice = new Price(x.StartingPrice),
+            Color = Color.FromHex(x.Color)
         }).ToArray();
         
         return new AddStocksRequest

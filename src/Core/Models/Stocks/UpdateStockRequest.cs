@@ -8,4 +8,5 @@ public record UpdateStockRequest
     public string? Ticker { get; init; }
     public float? Volatility { get; init; }
     public float? Drift { get; init; }
+    public Color? Color { get; init; }
 }

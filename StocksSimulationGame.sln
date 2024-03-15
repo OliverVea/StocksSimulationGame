@@ -14,10 +14,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sln", "sln", "{228C3462-C99
 		Directory.Build.props = Directory.Build.props
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
-		docker-compose.yml = docker-compose.yml
-		API.Dockerfile = API.Dockerfile
-		.dockerignore = .dockerignore
 		clean.py = clean.py
+		.config\dotnet-tools.json = .config\dotnet-tools.json
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{B3E5ED95-B3A7-40EC-8700-AB6FA93BAD89}"
@@ -25,8 +23,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "tests\Tests\Tests.csproj", "{96EF508E-7D5E-4EF3-9BD5-006CDADB43D4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Host.API", "src\Host.API\Host.API.csproj", "{0C047B4B-76C0-48AA-B42E-90EE8D68AB1D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Messages", "src\Messages\Messages.csproj", "{F23D195D-D5CC-4E19-B161-701B4913658F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "aspire", "aspire", "{58A1D635-AD95-460C-AA08-B982CE33C71F}"
 EndProject
@@ -60,10 +56,6 @@ Global
 		{0C047B4B-76C0-48AA-B42E-90EE8D68AB1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0C047B4B-76C0-48AA-B42E-90EE8D68AB1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0C047B4B-76C0-48AA-B42E-90EE8D68AB1D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F23D195D-D5CC-4E19-B161-701B4913658F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F23D195D-D5CC-4E19-B161-701B4913658F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F23D195D-D5CC-4E19-B161-701B4913658F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F23D195D-D5CC-4E19-B161-701B4913658F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BB33824A-7BE9-461C-A439-B115AE1D0575}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BB33824A-7BE9-461C-A439-B115AE1D0575}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BB33824A-7BE9-461C-A439-B115AE1D0575}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -79,7 +71,6 @@ Global
 		{B8683726-B70F-4179-AED8-7AF905BC043D} = {EE34AAB0-3F00-49DD-96C0-589DE1EC2A23}
 		{96EF508E-7D5E-4EF3-9BD5-006CDADB43D4} = {B3E5ED95-B3A7-40EC-8700-AB6FA93BAD89}
 		{0C047B4B-76C0-48AA-B42E-90EE8D68AB1D} = {EE34AAB0-3F00-49DD-96C0-589DE1EC2A23}
-		{F23D195D-D5CC-4E19-B161-701B4913658F} = {EE34AAB0-3F00-49DD-96C0-589DE1EC2A23}
 		{BB33824A-7BE9-461C-A439-B115AE1D0575} = {58A1D635-AD95-460C-AA08-B982CE33C71F}
 		{8F6F9187-A9F8-48A6-892A-4D0624DDFA40} = {58A1D635-AD95-460C-AA08-B982CE33C71F}
 	EndGlobalSection

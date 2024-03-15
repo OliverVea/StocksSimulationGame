@@ -1,12 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿namespace Persistence.Entities;
 
-namespace Persistence.Entities;
-
-public class StockPrice
+public class StockPrice : BaseEntity
 {
-    [Key]
-    public long Id { get; init; }
-    
     public required Guid StockId { get; init; }
     public required long SimulationStep { get; init; }
     public required float Price { get; init; }

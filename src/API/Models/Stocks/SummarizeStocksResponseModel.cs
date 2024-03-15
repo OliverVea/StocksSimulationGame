@@ -37,12 +37,19 @@ public class SummarizeStocksResponseModel
         /// <example>100</example>
         [Required] public float Price { get; }
         
+        /// <summary>
+        /// The color of the stock.
+        /// </summary>
+        /// <example>#007acc</example>
+        [Required] public string Color { get; }
+        
         internal SummarizeStockResponseModel((ListStockResponse, GetStockPriceResponse) stocksResponse)
         {
             var (response, priceResponse) = stocksResponse;
             StockId = response.StockId.Id.ToString();
             Ticker = response.Ticker;
             Price = priceResponse.Price.Value;
+            Color = response.Color.ToHex();
         }
     }
     

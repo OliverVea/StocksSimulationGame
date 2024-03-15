@@ -21,7 +21,7 @@ public class StockPriceServiceUT : BaseUT<IStockPriceService, StockPriceService>
     public async Task GetStockPricesAsync_WithNoStockPrices_ReturnsGetStockPricesResponse()
     {
         // Arrange
-        var request = DataBuilder.GetStockPricesRequest().Create();
+        var request = DataBuilder.GetStockPriceInIntervalRequest().Create();
         var response = DataBuilder.GetStockPricesResponse().With(x => x.StockPrices, []).Create();
         MockGetStockPricesAsync(response);
         
@@ -36,7 +36,7 @@ public class StockPriceServiceUT : BaseUT<IStockPriceService, StockPriceService>
     public async Task GetStockPricesAsync_WithSingleStockPrice_ReturnsGetStockPricesResponse()
     {
         // Arrange
-        var request = DataBuilder.GetStockPricesRequest().Create();
+        var request = DataBuilder.GetStockPriceInIntervalRequest().Create();
         
         var stockPrice = DataBuilder.GetStockPriceResponse().Create();
         var response = DataBuilder.GetStockPricesResponse([stockPrice]).Create();
@@ -53,7 +53,7 @@ public class StockPriceServiceUT : BaseUT<IStockPriceService, StockPriceService>
     public async Task GetStockPricesAsync_WithMultipleStockPrices_ReturnsGetStockPricesResponse()
     {
         // Arrange
-        var request = DataBuilder.GetStockPricesRequest().Create();
+        var request = DataBuilder.GetStockPriceInIntervalRequest().Create();
         
         var stockPrices = DataBuilder.GetStockPriceResponse().CreateMany(10).ToArray();
         var response = DataBuilder.GetStockPricesResponse(stockPrices).Create();

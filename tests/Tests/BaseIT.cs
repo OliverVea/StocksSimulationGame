@@ -1,8 +1,7 @@
-﻿using Microsoft.Extensions.Configuration.Memory;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
 using Persistence;
+using Persistence.Configuration;
 using Tests.DataBuilders;
 
 namespace Tests;
@@ -21,21 +20,11 @@ public abstract class BaseIT<TSut> where TSut : notnull
     {
         var services = new ServiceCollection();
 
-        var logger = new Logger("console", InternalTraceLevel.Debug, TestContext.Out);
-
-        services.AddSingleton<ILogger>(logger);
-
-        var configurationBuilder = new Microsoft.Extensions.Configuration.ConfigurationBuilder();
-        configurationBuilder.Add(new MemoryConfigurationSource
+        services.AddSqlite(new PersistenceConfiguration
         {
-            InitialData = new[]
-            {
-                new KeyValuePair<string, string?>("Persistence:Provider", "Sqlite"),
-                new KeyValuePair<string, string?>("Persistence:Sqlite:ConnectionString", "DataSource=Stocks;Filename=:memory:"),
-            },
+            Provider = PersistenceProvider.Sqlite,
+            Sqlite = new SqliteConfiguration("DataSource=Stocks;Filename=:memory:")
         });
-        
-        var configuration = configurationBuilder.Build();
 
         _services = services.BuildServiceProvider();
 

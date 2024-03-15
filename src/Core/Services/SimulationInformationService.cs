@@ -17,4 +17,18 @@ public class SimulationInformationService(ISimulationStepStorageRepository simul
     {
         return simulationStepStorageRepository.GetCurrentSimulationStepAsync(cancellationToken);
     }
+
+    public async Task<SimulationInformation> GetSimulationInformationAsync(CancellationToken cancellationToken)
+    {
+        var currentStep = await GetCurrentSimulationStepAsync(cancellationToken);
+        var now = DateTime.UtcNow;
+        var startTime = now - TimeSpan.FromSeconds(currentStep.Step * Constants.SimulationStepDuration.TotalSeconds);
+
+        return new SimulationInformation
+        {
+            CurrentStep = currentStep,
+            SimulationStepDuration = Constants.SimulationStepDuration,
+            StartTime = startTime
+        };
+    }
 }

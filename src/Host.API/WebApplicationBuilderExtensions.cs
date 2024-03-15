@@ -1,21 +1,21 @@
 ﻿using API.Extensions;
 using Core;
 using Persistence;
-using Messages;
 
 namespace Host;
 
 internal static class WebApplicationBuilderExtensions
 {
     
-    internal static void ConfigureBuilder(this WebApplicationBuilder app, IConfiguration configuration)
+    internal static void ConfigureBuilder(this WebApplicationBuilder app)
     {
+        app.Services.AddLogging(ConfigureLogging);
+        
         app.AddServiceDefaults();
         
         app.AddApi();
         app.Services.AddCore();
-        app.AddMessages();
-        app.AddPersistence(configuration);
+        app.AddPersistence();
     }
 
     private static void ConfigureLogging(ILoggingBuilder loggingBuilder)

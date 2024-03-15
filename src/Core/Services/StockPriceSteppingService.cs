@@ -1,4 +1,4 @@
-﻿using Core.Messages;
+﻿using Core.Models;
 using Core.Models.Ids;
 using Core.Models.Prices;
 using Core.Models.Stocks;
@@ -11,17 +11,17 @@ public class StockPriceSteppingService(ILogger<StockPriceSteppingService> logger
     IStockPriceService stockPriceService,
     IRandomService randomService) : IStockPriceSteppingService
 {
-    public async Task OnSimulationSteppedAsync(SimulationSteppedMessage message, CancellationToken cancellationToken)
+    public async Task OnSimulationSteppedAsync(SimulationStep simulationStep, CancellationToken cancellationToken)
     {
         var stocksByStockId = await GetStocksByStockIdAsync(cancellationToken);
-        var stockPricesByStockId = await GetStockPricesByStockIdAsync(message, stocksByStockId, cancellationToken);
+        var stockPricesByStockId = await GetStockPricesByStockIdAsync(simulationStep, stocksByStockId, cancellationToken);
 
         var stocksToAdd = stocksByStockId.Keys.Except(stockPricesByStockId.Keys).ToArray();
         var stocksToUpdate = stocksByStockId.Keys.Intersect(stockPricesByStockId.Keys).ToArray();
         
-        var newStockPrices = GetNewStockPrices(stocksToAdd, message, stocksByStockId).ToArray();
+        var newStockPrices = GetNewStockPrices(stocksToAdd, simulationStep, stocksByStockId).ToArray();
         
-        var updatedStockPrices = GetUpdatedStockPrices(stocksToUpdate, message, stocksByStockId, stockPricesByStockId).ToArray();
+        var updatedStockPrices = GetUpdatedStockPrices(stocksToUpdate, simulationStep, stocksByStockId, stockPricesByStockId).ToArray();
         
         var combinedStockPrices = newStockPrices.Concat(updatedStockPrices).ToArray();
         
@@ -42,14 +42,14 @@ public class StockPriceSteppingService(ILogger<StockPriceSteppingService> logger
     }
 
     private async Task<Dictionary<StockId, GetStockPriceResponse>> GetStockPricesByStockIdAsync(
-        SimulationSteppedMessage message,
+        SimulationStep simulationStep,
         Dictionary<StockId, ListStockResponse> stocksByStockId,
         CancellationToken cancellationToken)
     {
         var getPricesRequest = new GetStockPricesForStepRequest
         {
             StockIds = stocksByStockId.Keys,
-            SimulationStep = message.SimulationStep - 1,
+            SimulationStep = simulationStep - 1,
         };
 
         var stockPrices = await stockPriceService.GetStockPricesForStepAsync(getPricesRequest, cancellationToken);
@@ -59,7 +59,7 @@ public class StockPriceSteppingService(ILogger<StockPriceSteppingService> logger
 
     private IEnumerable<SetStockPriceRequest> GetNewStockPrices(
         IEnumerable<StockId> stocksToAdd,
-        SimulationSteppedMessage message,
+        SimulationStep simulationStep,
         Dictionary<StockId, ListStockResponse> stocksByStockId)
     {
         return stocksToAdd.Select(stockId =>
@@ -70,7 +70,7 @@ public class StockPriceSteppingService(ILogger<StockPriceSteppingService> logger
             return new SetStockPriceRequest
             {
                 StockId = stockId,
-                SimulationStep = message.SimulationStep,
+                SimulationStep = simulationStep,
                 Price = newPrice,
             };
         });
@@ -78,7 +78,7 @@ public class StockPriceSteppingService(ILogger<StockPriceSteppingService> logger
 
     private IEnumerable<SetStockPriceRequest> GetUpdatedStockPrices(
         IEnumerable<StockId> stocksToUpdate,
-        SimulationSteppedMessage message,
+        SimulationStep simulationStep,
         Dictionary<StockId, ListStockResponse> stocksByStockId,
         Dictionary<StockId, GetStockPriceResponse> stockPricesByStockId)
     {
@@ -92,7 +92,7 @@ public class StockPriceSteppingService(ILogger<StockPriceSteppingService> logger
             return new SetStockPriceRequest
             {
                 StockId = stockId,
-                SimulationStep = message.SimulationStep,
+                SimulationStep = simulationStep,
                 Price = newPrice,
             };
         });

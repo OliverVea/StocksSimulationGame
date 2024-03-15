@@ -1,0 +1,77 @@
+{
+  "resources": {
+    "Db": {
+      "type": "container.v0",
+      "connectionString": "Server={Db.bindings.tcp.host},{Db.bindings.tcp.port};User ID=sa;Password={Db.inputs.password};TrustServerCertificate=true",
+      "image": "mcr.microsoft.com/mssql/server:2022-latest",
+      "env": {
+        "ACCEPT_EULA": "Y",
+        "MSSQL_SA_PASSWORD": "{Db.inputs.password}"
+      },
+      "bindings": {
+        "tcp": {
+          "scheme": "tcp",
+          "protocol": "tcp",
+          "transport": "tcp",
+          "containerPort": 1433
+        }
+      },
+      "inputs": {
+        "password": {
+          "type": "string",
+          "secret": true,
+          "default": {
+            "generate": {
+              "minLength": 10
+            }
+          }
+        }
+      }
+    },
+    "db-stocks": {
+      "type": "value.v0",
+      "connectionString": "{Db.connectionString};Database=db-stocks"
+    },
+    "Api": {
+      "type": "project.v0",
+      "path": "../../src/Host.API/Host.API.csproj",
+      "env": {
+        "OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EXCEPTION_LOG_ATTRIBUTES": "true",
+        "OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EVENT_LOG_ATTRIBUTES": "true",
+        "Persistence__Provider": "Aspire",
+        "ConnectionStrings__db-stocks": "{db-stocks.connectionString}"
+      },
+      "bindings": {
+        "http": {
+          "scheme": "http",
+          "protocol": "tcp",
+          "transport": "http"
+        },
+        "https": {
+          "scheme": "https",
+          "protocol": "tcp",
+          "transport": "http"
+        }
+      }
+    },
+    "Ui": {
+      "type": "dockerfile.v0",
+      "path": "../../src/frontend/Dockerfile",
+      "context": "../../src/frontend",
+      "env": {
+        "NODE_ENV": "development",
+        "services__Api__0": "{Api.bindings.http.url}",
+        "services__Api__1": "{Api.bindings.https.url}",
+        "PORT": "{Ui.bindings.https.port}"
+      },
+      "bindings": {
+        "https": {
+          "scheme": "https",
+          "protocol": "tcp",
+          "transport": "http",
+          "containerPort": 7067
+        }
+      }
+    }
+  }
+}

@@ -7,7 +7,7 @@ namespace API.Endpoints.PriceHistory;
 
 internal static class EndpointRouteBuilderExtensions
 {
-    private const string BasePath = "/PriceHistory";
+    private const string BasePath = "/price-history";
     private const string Tag = "Price History";
     
     internal static void AddPriceHistoryEndpoints(this IEndpointRouteBuilder endpoints)

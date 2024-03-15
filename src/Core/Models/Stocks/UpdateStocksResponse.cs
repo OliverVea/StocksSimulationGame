@@ -1,5 +1,3 @@
 ﻿namespace Core.Models.Stocks;
 
-public class UpdateStocksResponse
-{
-}
+public class UpdateStocksResponse;

@@ -49,6 +49,12 @@ public class ListStocksResponseModel
         /// <example>100</example>
         [Required] public float Price { get; }
         
+        /// <summary>
+        /// The color of the stock.
+        /// </summary>
+        /// <example>#007acc</example>
+        [Required] public string Color { get; }
+        
         internal ListStockResponseModel((ListStockResponse, GetStockPriceResponse) stocksResponse)
         {
             var (response, priceResponse) = stocksResponse;
@@ -57,6 +63,7 @@ public class ListStocksResponseModel
             Volatility = response.Volatility;
             Drift = response.Drift;
             Price = priceResponse.Price.Value;
+            Color = response.Color.ToHex();
         }
     }
 

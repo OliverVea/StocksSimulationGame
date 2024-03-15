@@ -1,6 +1,8 @@
 import StockPriceService from '../services/stockPriceService';
 
 import { Chart, CategoryScale, LinearScale, BarElement, LineController, PointElement, LineElement } from 'chart.js';
+import StocksService from '../services/stocksService';
+import { s } from 'vite/dist/node/types.d-jgA8ss1A';
 
 // Register the components
 Chart.register(CategoryScale, LinearScale, BarElement, LineController, PointElement, LineElement);
@@ -68,27 +70,10 @@ class StockPriceChart extends HTMLElement {
                         beginAtZero: true
                     }   
                 },
-                plugins: {
-                    legend: {
-                        display: true,
-                        labels: {
-                            color: 'rgb(255, 99, 132)',
-                            font: {
-                                size: 16
-                            },
-                            boxWidth: 20,
-                            padding: 20 
-                        },
-                        title: {
-                            display: true,
-                            text: 'Stock Price'
-                        }
-                    }
-                },
                 responsive: true,
                 maintainAspectRatio: false,
                 animation: {
-                    duration: 0
+                    duration: 0.05
                 }
             }
         });
@@ -99,7 +84,10 @@ class StockPriceChart extends HTMLElement {
     }
 
     private async refresh() {
+        const stockSummaries = await StocksService.getStockSummaries();
         const priceHistory = await StockPriceService.getStockPriceHistory();
+
+        const stockColorMap = new Map(stockSummaries.stocks.map((stock) => [stock.stockId, stock.color]));
 
         priceHistory.stockPrices.forEach((stockPrice, i) => {
             if (i >= this.chart.data.datasets.length) {
@@ -111,7 +99,7 @@ class StockPriceChart extends HTMLElement {
                             y: entry.price
                         };
                     }),
-                    borderColor: 'rgb(255, 99, 132)',
+                    borderColor: stockColorMap.get(stockPrice.stockId) || 'black',
                     borderWidth: 1,
                     fill: false,
                     tension: 0.1

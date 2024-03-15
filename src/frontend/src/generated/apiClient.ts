@@ -45,15 +45,20 @@ export class ApiClient extends AuthorizedApiBase {
     }
 
     /**
+     * @param dataPoints (optional) 
      * @param from (optional) 
      * @param to (optional) 
      * @return Success
      */
-    apiPriceHistory(stockId: string, from: number | undefined, to: number | undefined): Promise<GetPriceHistoryResponseModel> {
-        let url_ = this.baseUrl + "/api/PriceHistory/{stockId}?";
+    apiPriceHistory(stockId: string, dataPoints: number | undefined, from: number | undefined, to: number | undefined): Promise<GetPriceHistoryResponseModel> {
+        let url_ = this.baseUrl + "/api/price-history/{stockId}?";
         if (stockId === undefined || stockId === null)
             throw new Error("The parameter 'stockId' must be defined.");
         url_ = url_.replace("{stockId}", encodeURIComponent("" + stockId));
+        if (dataPoints === null)
+            throw new Error("The parameter 'dataPoints' cannot be null.");
+        else if (dataPoints !== undefined)
+            url_ += "dataPoints=" + encodeURIComponent("" + dataPoints) + "&";
         if (from === null)
             throw new Error("The parameter 'from' cannot be null.");
         else if (from !== undefined)
@@ -93,10 +98,6 @@ export class ApiClient extends AuthorizedApiBase {
             result400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as ErrorModel;
             return throwException("Bad Request", status, _responseText, _headers, result400);
             });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            return throwException("Unauthorized", status, _responseText, _headers);
-            });
         } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
@@ -108,8 +109,52 @@ export class ApiClient extends AuthorizedApiBase {
     /**
      * @return Success
      */
+    apiSimulationInformation(): Promise<GetSimulationInformationResponseModel> {
+        let url_ = this.baseUrl + "/api/simulation-information/{stockId}";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.processApiSimulationInformation(_response);
+        });
+    }
+
+    protected processApiSimulationInformation(response: Response): Promise<GetSimulationInformationResponseModel> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as GetSimulationInformationResponseModel;
+            return result200;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            result400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as ErrorModel;
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<GetSimulationInformationResponseModel>(null as any);
+    }
+
+    /**
+     * @return Success
+     */
     apiStocksGet(): Promise<ListStocksResponseModel> {
-        let url_ = this.baseUrl + "/api/Stocks";
+        let url_ = this.baseUrl + "/api/stocks";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_: RequestInit = {
@@ -155,7 +200,7 @@ export class ApiClient extends AuthorizedApiBase {
      * @return Success
      */
     apiStocksPost(body: AddStocksRequestModel): Promise<AddStocksResponseModel> {
-        let url_ = this.baseUrl + "/api/Stocks";
+        let url_ = this.baseUrl + "/api/stocks";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(body);
@@ -211,7 +256,7 @@ export class ApiClient extends AuthorizedApiBase {
      * @return Success
      */
     apiStocksDelete(body: DeleteStocksRequestModel): Promise<DeleteStocksResponseModel> {
-        let url_ = this.baseUrl + "/api/Stocks";
+        let url_ = this.baseUrl + "/api/stocks";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(body);
@@ -267,7 +312,7 @@ export class ApiClient extends AuthorizedApiBase {
      * @return Success
      */
     apiStocksPatch(body: UpdateStocksRequestModel): Promise<void> {
-        let url_ = this.baseUrl + "/api/Stocks";
+        let url_ = this.baseUrl + "/api/stocks";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(body);
@@ -320,7 +365,7 @@ export class ApiClient extends AuthorizedApiBase {
      * @return Success
      */
     apiStocksSummaries(): Promise<SummarizeStocksResponseModel> {
-        let url_ = this.baseUrl + "/api/Stocks/summaries";
+        let url_ = this.baseUrl + "/api/stocks/summaries";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_: RequestInit = {
@@ -365,6 +410,8 @@ export interface AddStockRequestModel {
     volatility: number;
     /** The drift of the stock. */
     drift: number;
+    /** The color of the stock. */
+    color: string;
 }
 
 /** Contains information about a stock that was added. */
@@ -424,6 +471,16 @@ Can be lower than the "To" parameter of the request. */
     readonly prices: PriceHistoryEntryModel[];
 }
 
+/** Represents the response model for the simulation information endpoint. */
+export interface GetSimulationInformationResponseModel {
+    /** The current step of the simulation. */
+    readonly currentStep?: number;
+    /** The number of seconds per step in the simulation. */
+    readonly secondsPerStep?: number;
+    /** The start time of the simulation. */
+    readonly startTime?: string;
+}
+
 /** Contains information about a stock. */
 export interface ListStockResponseModel {
     /** The unique identifier of the stock. */
@@ -436,6 +493,8 @@ export interface ListStockResponseModel {
     readonly drift: number;
     /** The price of the stock. */
     readonly price: number;
+    /** The color of the stock. */
+    readonly color: string;
 }
 
 /** Contains a list of stocks. */
@@ -460,6 +519,8 @@ export interface SummarizeStockResponseModel {
     readonly ticker: string;
     /** The price of the stock. */
     readonly price: number;
+    /** The color of the stock. */
+    readonly color: string;
 }
 
 /** Contains a list of stocks. */

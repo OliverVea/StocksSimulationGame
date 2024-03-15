@@ -1,3 +1,3 @@
 ﻿namespace Core.Models.Ids;
 
-public readonly record struct UserId(string Value);
+public readonly record struct UserId(string Id);

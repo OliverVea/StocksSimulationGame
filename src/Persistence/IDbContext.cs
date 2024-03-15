@@ -8,5 +8,7 @@ internal interface IDbContext
     DbSet<Stock> Stocks { get; }
     DbSet<StockPrice> StockPrices { get; }
     DbSet<CurrentSimulationStep> CurrentSimulationSteps { get; }
+    DbSet<UserInformation> UserInformation { get; }
+    DbSet<Ask> Asks { get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }
