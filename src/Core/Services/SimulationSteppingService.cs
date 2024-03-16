@@ -1,6 +1,6 @@
 ﻿namespace Core.Services;
 
-public class SimulationSteppingService(ISimulationInformationService simulationInformationService, IStockPriceSteppingService stockPriceSteppingService) : ISimulationSteppingService
+public sealed class SimulationSteppingService(ISimulationInformationService simulationInformationService, IStockPriceSteppingService stockPriceSteppingService) : ISimulationSteppingService
 {
     public async Task StepSimulationAsync(CancellationToken cancellationToken)
     {

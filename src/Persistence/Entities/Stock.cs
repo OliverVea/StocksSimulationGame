@@ -2,7 +2,7 @@
 
 namespace Persistence.Entities;
 
-internal class Stock : BaseEntity
+internal sealed class Stock : BaseEntity
 {
     public required Guid StockId { get; init; }
     [MaxLength(16)] public required string Ticker { get; set; }

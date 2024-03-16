@@ -6,7 +6,7 @@ namespace API.Models.Stocks;
 /// <summary>
 /// Contains information about stocks that were added.
 /// </summary>
-public class AddStocksResponseModel
+public sealed class AddStocksResponseModel
 {
     /// <summary>
     /// The stocks that were added.
@@ -16,7 +16,7 @@ public class AddStocksResponseModel
     /// <summary>
     /// Contains information about a stock that was added.
     /// </summary>
-    public class AddStockResponseModel
+    public sealed class AddStockResponseModel
     {
         /// <summary>
         /// The unique identifier of the stock.

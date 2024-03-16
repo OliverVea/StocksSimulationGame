@@ -7,7 +7,7 @@ namespace API.Models.Stocks;
 /// <summary>
 /// Contains a list of stocks.
 /// </summary>
-public class SummarizeStocksResponseModel
+public sealed class SummarizeStocksResponseModel
 {
     /// <summary>
     /// Contains summaries of a stock.
@@ -17,7 +17,7 @@ public class SummarizeStocksResponseModel
     /// <summary>
     /// Contains summaries of a stock.
     /// </summary>
-    public class SummarizeStockResponseModel
+    public sealed class SummarizeStockResponseModel
     {
         /// <summary>
         /// The unique identifier of the stock.

@@ -7,7 +7,7 @@ namespace API.Models.Stocks;
 /// <summary>
 /// Represents a request to delete stocks.
 /// </summary>
-public class DeleteStocksRequestModel
+public sealed class DeleteStocksRequestModel
 {
     /// <summary>
     /// The unique identifiers of the stocks to delete.

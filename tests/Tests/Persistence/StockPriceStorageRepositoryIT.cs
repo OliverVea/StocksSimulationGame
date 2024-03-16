@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace Tests.Persistence;
 
-public class StockPriceStorageRepositoryIT : BaseIT<IStockPriceStorageRepository>
+public sealed class StockPriceStorageRepositoryIT : BaseIT<IStockPriceStorageRepository>
 {
     [Test]
     public async Task GetStockPricesAsync_WithNoStockPrices_RespondsEmptyStockPrices()

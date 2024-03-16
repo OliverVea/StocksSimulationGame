@@ -5,7 +5,7 @@ using NUnit.Framework;
 
 namespace Tests.Persistence;
 
-public class StockStorageRepositoryIT : BaseIT<IStockStorageRepository>
+public sealed class StockStorageRepositoryIT : BaseIT<IStockStorageRepository>
 {
     [Test]
     public async Task AddStocksAsync_WithSingleStock_RespondsCreatedStock()

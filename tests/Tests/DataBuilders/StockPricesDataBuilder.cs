@@ -4,7 +4,7 @@ using Core.Models.Prices;
 
 namespace Tests.DataBuilders;
 
-public partial class DataBuilder
+public sealed partial class DataBuilder
 {
     public IPostprocessComposer<GetStockPriceInIntervalRequest> GetStockPriceInIntervalRequest()
     {

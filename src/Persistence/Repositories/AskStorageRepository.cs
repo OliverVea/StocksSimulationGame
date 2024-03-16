@@ -6,11 +6,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Persistence.Repositories;
 
-internal class AskStorageRepository(IDbContext dbContext) : IAskStorageRepository
+internal sealed class AskStorageRepository(IDbContext dbContext) : IAskStorageRepository
 {
-    public Task CreateAskAsync(AskId askId, CreateAskRequest request, CancellationToken cancellationToken)
+    public Task CreateAskAsync(Ask ask, CancellationToken cancellationToken)
     {
-        var entity = Map(askId, request);
+        var entity = Map(ask);
         
         dbContext.Asks.Add(entity);
         
@@ -44,15 +44,15 @@ internal class AskStorageRepository(IDbContext dbContext) : IAskStorageRepositor
     }
     
     
-    private static Entities.Ask Map(AskId askId, CreateAskRequest request)
+    private static Entities.Ask Map(Ask ask)
     {
         return new Entities.Ask
         {
-            AskId = askId.Id,
-            UserId = request.UserId.Id,
-            StockId = request.StockId.Id,
-            Amount = request.Amount,
-            PricePerUnit = request.PricePerUnit.Value
+            AskId = ask.AskId.Id,
+            UserId = ask.UserId.Id,
+            StockId = ask.StockId.Id,
+            Amount = ask.Amount,
+            PricePerUnit = ask.PricePerUnit.Value,
         };
     }
 
@@ -61,14 +61,15 @@ internal class AskStorageRepository(IDbContext dbContext) : IAskStorageRepositor
         return new GetAsksResponse
         {
             UserId = userId,
-            Asks = entities.Select(Map).ToArray()
+            Asks = entities.Select(x => Map(x, userId)).ToArray(),
         };
     }
 
-    private static GetAskResponse Map(Entities.Ask entity)
+    private static Ask Map(Entities.Ask entity, UserId userId)
     {
-        return new GetAskResponse
+        return new Ask
         {
+            UserId = userId,
             AskId = new AskId(entity.AskId),
             StockId = new StockId(entity.StockId),
             Amount = entity.Amount,

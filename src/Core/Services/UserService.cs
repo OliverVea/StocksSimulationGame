@@ -6,7 +6,7 @@ using OneOf.Types;
 
 namespace Core.Services;
 
-public class UserService(ILogger<UserService> logger, IUserIdService userIdService, IUserStorageRepository userStorageRepository) : IUserService
+public sealed class UserService(ILogger<UserService> logger, IUserIdService userIdService, IUserStorageRepository userStorageRepository) : IUserService
 {
     public Task<UserInformation?> GetUserAsync(CancellationToken cancellationToken)
     {

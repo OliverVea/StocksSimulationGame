@@ -4,7 +4,7 @@ using Core.Services;
 
 namespace API;
 
-internal class UserIdInitializationService(IUserIdService userIdService)
+internal sealed class UserIdInitializationService(IUserIdService userIdService)
 {
     public void Initialize(ClaimsPrincipal user)
     {

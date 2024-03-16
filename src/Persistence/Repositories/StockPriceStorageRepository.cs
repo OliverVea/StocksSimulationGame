@@ -7,7 +7,7 @@ using Persistence.Entities;
 
 namespace Persistence.Repositories;
 
-internal class StockPriceStorageRepository(IDbContext dbContext) : IStockPriceStorageRepository
+internal sealed class StockPriceStorageRepository(IDbContext dbContext) : IStockPriceStorageRepository
 {
     public async Task<GetStockPriceInIntervalResponse> GetStockPriceInIntervalAsync(GetStockPriceInIntervalRequest request, CancellationToken cancellationToken)
     {

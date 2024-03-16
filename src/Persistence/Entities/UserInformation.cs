@@ -2,7 +2,7 @@
 
 namespace Persistence.Entities;
 
-internal class UserInformation : BaseEntity
+internal sealed class UserInformation : BaseEntity
 {
     [MaxLength(PersistenceConstants.MaxUserIdLength)]
     public required string UserId { get; init; }

@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Core;
+using Core.Models.Ids;
+using Core.Services;
+using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using Persistence;
 using Persistence.Configuration;
@@ -10,6 +13,8 @@ namespace Tests;
 public abstract class BaseIT<TSut> where TSut : notnull
 {
     protected readonly DataBuilder DataBuilder = new();
+    protected CancellationTokenSource CancellationTokenSource = new();
+    protected CancellationToken CancellationToken => CancellationTokenSource.Token;
 
     private IServiceProvider _services = null!;
     
@@ -26,6 +31,8 @@ public abstract class BaseIT<TSut> where TSut : notnull
             Sqlite = new SqliteConfiguration("DataSource=Stocks;Filename=:memory:")
         });
 
+        services.AddCore();
+
         _services = services.BuildServiceProvider();
 
         await _services.EnsureCreatedAsync();
@@ -34,5 +41,26 @@ public abstract class BaseIT<TSut> where TSut : notnull
     protected T GetService<T>() where T : notnull
     {
         return _services.GetRequiredService<T>();
+    }
+    
+    [TearDown]
+    protected void ResetCancellationToken()
+    {
+        CancellationTokenSource.Cancel();
+        CancellationTokenSource.Dispose();
+        CancellationTokenSource = new CancellationTokenSource();
+    }
+    
+    [TearDown]
+    protected void ResetUserId()
+    {
+        GetService<IUserIdService>().Reset();
+    }
+
+    protected UserId WithUserId()
+    {
+        const string userId = "user-id";
+        GetService<IUserIdService>().Initialize(userId);
+        return GetService<IUserIdService>().UserId ?? throw new NotSupportedException();
     }
 }

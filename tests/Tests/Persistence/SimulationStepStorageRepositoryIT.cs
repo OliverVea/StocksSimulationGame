@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace Tests.Persistence;
 
-public class SimulationStepStorageRepositoryIT : BaseIT<ISimulationStepStorageRepository>
+public sealed class SimulationStepStorageRepositoryIT : BaseIT<ISimulationStepStorageRepository>
 {
     [Test]
     public async Task SetCurrentSimulationStepAsync_WhenCalledWithSimulationStep_ShouldSetCurrentSimulationStep()

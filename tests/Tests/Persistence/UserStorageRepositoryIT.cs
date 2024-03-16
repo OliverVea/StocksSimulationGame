@@ -4,10 +4,8 @@ using NUnit.Framework;
 
 namespace Tests.Persistence;
 
-public class UserStorageRepositoryIT : BaseIT<IUserStorageRepository>
+public sealed class UserStorageRepositoryIT : BaseIT<IUserStorageRepository>
 {
-    private static readonly CancellationTokenSource CancellationTokenSource = new();
-    private static CancellationToken CancellationToken => CancellationTokenSource.Token;
     
     [Test]
     public async Task GetUserAsync_NoUserInDbWithUserId_ReturnsNull()

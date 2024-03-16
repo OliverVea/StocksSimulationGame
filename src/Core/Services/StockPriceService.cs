@@ -3,7 +3,7 @@ using Core.Repositories;
 
 namespace Core.Services;
 
-public class StockPriceService(IStockPriceStorageRepository stockPriceStorageRepository) : IStockPriceService
+public sealed class StockPriceService(IStockPriceStorageRepository stockPriceStorageRepository) : IStockPriceService
 {
     public Task<GetStockPriceInIntervalResponse> GetStockPriceInIntervalAsync(GetStockPriceInIntervalRequest request, CancellationToken cancellationToken)
     {

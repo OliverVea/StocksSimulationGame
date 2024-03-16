@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Persistence.Repositories;
 
-internal class UserStorageRepository(IDbContext dbContext) : IUserStorageRepository
+internal sealed class UserStorageRepository(IDbContext dbContext) : IUserStorageRepository
 {
     public async Task<UserInformation?> GetUserAsync(UserId userId, CancellationToken cancellationToken)
     { 

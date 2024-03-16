@@ -5,7 +5,7 @@ namespace API.Models;
 /// <summary>
 /// Contains information about an error.
 /// </summary>
-public class ErrorModel
+public sealed class ErrorModel
 {
     /// <summary>
     /// The error message.

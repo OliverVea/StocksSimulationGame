@@ -6,7 +6,7 @@ namespace API.Models.Stocks;
 /// <summary>
 /// Contains information about the deleted stocks.
 /// </summary>
-public class DeleteStocksResponseModel
+public sealed class DeleteStocksResponseModel
 {
     /// <summary>
     /// The unique identifiers of the deleted stocks.

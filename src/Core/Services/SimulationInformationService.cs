@@ -3,7 +3,7 @@ using Core.Repositories;
 
 namespace Core.Services;
 
-public class SimulationInformationService(ISimulationStepStorageRepository simulationStepStorageRepository) : ISimulationInformationService
+public sealed class SimulationInformationService(ISimulationStepStorageRepository simulationStepStorageRepository) : ISimulationInformationService
 {
     public async Task<SimulationStep> IncrementSimulationStepAsync(CancellationToken cancellationToken)
     {

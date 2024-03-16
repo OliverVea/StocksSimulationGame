@@ -35,7 +35,7 @@ public sealed record GetPriceHistoryResponseModel
     /// <summary>
     /// Represents an entry in the price history of a stock.
     /// </summary>
-    public class PriceHistoryEntryModel
+    public sealed record PriceHistoryEntryModel
     {
         /// <summary>
         /// The simulation step of the price.

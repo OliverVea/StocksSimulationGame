@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Core.Jobs;
 
-public class SimulationSteppingJob(IServiceScopeFactory serviceScopeFactory) : BaseJob(serviceScopeFactory)
+public sealed class SimulationSteppingJob(IServiceScopeFactory serviceScopeFactory) : BaseJob(serviceScopeFactory)
 {
     protected override TimeSpan Interval { get; } = Constants.SimulationStepDuration;
 

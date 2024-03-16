@@ -5,23 +5,24 @@ using Microsoft.Extensions.Logging;
 
 namespace Core.Services;
 
-public class AskService(ILogger<AskService> logger, IAskStorageRepository storageRepository) : IAskService
+public sealed class AskService(ILogger<AskService> logger, IAskStorageRepository storageRepository) : IAskService
 {
     private static AskId NewAskId() => new(Guid.NewGuid());
 
-    public async Task<CreateAskResponse> CreateAskAsync(CreateAskRequest request, CancellationToken cancellationToken)
+    public async Task<Ask> CreateAskAsync(CreateAskRequest request, CancellationToken cancellationToken)
     {
-        var askId = NewAskId();
-        await storageRepository.CreateAskAsync(askId, request, cancellationToken);
-        
-        return new CreateAskResponse
+        var ask = new Ask
         {
-            AskId = askId,
-            UserId = request.UserId,
+            AskId = NewAskId(),
             StockId = request.StockId,
+            UserId = request.UserId,
+            PricePerUnit = request.PricePerUnit,
             Amount = request.Amount,
-            PricePerUnit = request.PricePerUnit
         };
+        
+        await storageRepository.CreateAskAsync(ask, cancellationToken);
+
+        return ask;
     }
 
     public Task<GetAsksResponse> GetAsksAsync(GetAsksRequest request, CancellationToken cancellationToken)
@@ -29,7 +30,7 @@ public class AskService(ILogger<AskService> logger, IAskStorageRepository storag
         return storageRepository.GetAsksAsync(request, cancellationToken);
     }
 
-    public async Task<DeleteAsksResponse> DeleteAsksAsync(DeleteAsksRequest request, CancellationToken cancellationToken)
+    public async Task DeleteAsksAsync(DeleteAsksRequest request, CancellationToken cancellationToken)
     {
         var existingRequest = new GetAsksRequest { UserId = request.UserId, AskIds = request.AskIds };
         var existingAsks = await storageRepository.GetAsksAsync(existingRequest, cancellationToken);
@@ -47,7 +48,5 @@ public class AskService(ILogger<AskService> logger, IAskStorageRepository storag
         };
         
         await storageRepository.DeleteAsksAsync(request, cancellationToken);
-
-        return new DeleteAsksResponse();
     }
 }

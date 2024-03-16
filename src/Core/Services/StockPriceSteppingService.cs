@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Core.Services;
 
-public class StockPriceSteppingService(ILogger<StockPriceSteppingService> logger,
+public sealed class StockPriceSteppingService(ILogger<StockPriceSteppingService> logger,
     IStockService stockService,
     IStockPriceService stockPriceService,
     IRandomService randomService) : IStockPriceSteppingService

@@ -5,7 +5,7 @@ using Core.Models.Stocks;
 
 namespace Tests.DataBuilders;
 
-public partial class DataBuilder
+public sealed partial class DataBuilder
 {
     public IPostprocessComposer<AddStocksRequest> AddStocksRequest()
     {

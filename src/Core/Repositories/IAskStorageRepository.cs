@@ -5,7 +5,7 @@ namespace Core.Repositories;
 
 public interface IAskStorageRepository
 {
-    Task CreateAskAsync(AskId askId, CreateAskRequest request, CancellationToken cancellationToken);
+    Task CreateAskAsync(Ask ask, CancellationToken cancellationToken);
     Task<GetAsksResponse> GetAsksAsync(GetAsksRequest request, CancellationToken cancellationToken);
     Task DeleteAsksAsync(DeleteAsksRequest request, CancellationToken cancellationToken);
 }

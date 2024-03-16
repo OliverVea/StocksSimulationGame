@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Persistence.Repositories;
 
-internal class StockStorageRepository(IDbContext dbContext) : IStockStorageRepository
+internal sealed class StockStorageRepository(IDbContext dbContext) : IStockStorageRepository
 {
     public async Task<ListStocksResponse> ListStocksAsync(ListStocksRequest request, CancellationToken cancellationToken)
     {

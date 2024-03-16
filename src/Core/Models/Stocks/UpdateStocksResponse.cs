@@ -1,3 +1,3 @@
 ﻿namespace Core.Models.Stocks;
 
-public class UpdateStocksResponse;
+public sealed record UpdateStocksResponse;

@@ -2,7 +2,7 @@
 
 namespace Core.Services;
 
-public class UserIdService : IUserIdService
+public sealed class UserIdService : IUserIdService
 {
     private bool _initialized;
     private UserId? _userId;
@@ -21,5 +21,11 @@ public class UserIdService : IUserIdService
     {
         if (!_initialized) throw new InvalidOperationException("UserIdService has not been initialized.");
         return _userId;
+    }
+
+    public void Reset()
+    {
+        _userId = null;
+        _initialized = false;
     }
 }

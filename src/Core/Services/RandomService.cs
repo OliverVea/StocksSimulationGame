@@ -1,6 +1,6 @@
 ﻿namespace Core.Services;
 
-public class RandomService : IRandomService
+public sealed class RandomService : IRandomService
 {
     private readonly Random _random = new();
 

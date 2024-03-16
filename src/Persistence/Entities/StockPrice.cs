@@ -1,6 +1,6 @@
 ﻿namespace Persistence.Entities;
 
-public class StockPrice : BaseEntity
+public sealed class StockPrice : BaseEntity
 {
     public required Guid StockId { get; init; }
     public required long SimulationStep { get; init; }

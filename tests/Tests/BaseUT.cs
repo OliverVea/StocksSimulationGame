@@ -4,8 +4,7 @@ using Tests.DataBuilders;
 namespace Tests;
 
 [Category("Unit Test")]
-public class BaseUT<TContract, TImplementation>
-    where TImplementation : class, TContract
+public abstract class BaseUT<TContract, TImplementation> where TImplementation : class, TContract
 {
     protected readonly CancellationToken CancellationToken = new();
     

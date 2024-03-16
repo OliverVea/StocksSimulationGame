@@ -7,7 +7,7 @@ using NUnit.Framework;
 
 namespace Tests.Core;
 
-public class StockPriceServiceUT : BaseUT<IStockPriceService, StockPriceService>
+public sealed class StockPriceServiceUT : BaseUT<IStockPriceService, StockPriceService>
 {
     private Mock<IStockPriceStorageRepository> _stockPriceStorageRepositoryMock = null!;
     

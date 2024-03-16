@@ -8,7 +8,7 @@ using NUnit.Framework;
 
 namespace Tests.Core;
 
-public class StockServiceUT : BaseUT<IStockService, StockService>
+public sealed class StockServiceUT : BaseUT<IStockService, StockService>
 {
     [Test]
     public async Task AddStocksAsync_NoDuplicates_ReturnsAddStocksResponse()

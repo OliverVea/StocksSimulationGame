@@ -3,7 +3,7 @@ using Core.Models;
 
 namespace Tests.DataBuilders;
 
-public partial class DataBuilder
+public sealed partial class DataBuilder
 {
     public IPostprocessComposer<SimulationStep> SimulationStep()
     {

@@ -9,7 +9,7 @@ namespace API.Models.Stocks;
 /// <summary>
 /// Creates new stocks with the given parameters.
 /// </summary>
-public sealed record AddStocksRequestModel
+public sealed class AddStocksRequestModel
 {
     /// <summary>
     /// The stocks to create.
@@ -26,7 +26,7 @@ public sealed record AddStocksRequestModel
     /// <summary>
     /// Creates a single stock with the given parameters.
     /// </summary>
-    public class AddStockRequestModel
+    public sealed class AddStockRequestModel
     {
         /// <summary>
         /// The ticker of the stock. Must be unique.

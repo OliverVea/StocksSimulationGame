@@ -4,7 +4,7 @@ using Core.Models.User;
 
 namespace Tests.DataBuilders;
 
-public partial class DataBuilder
+public sealed partial class DataBuilder
 {
     public IPostprocessComposer<UserId> UserId()
     {

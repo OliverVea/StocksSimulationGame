@@ -3,7 +3,7 @@ using Moq;
 
 namespace Tests;
 
-public class SutBuilder<T> where T : class
+public sealed class SutBuilder<T> where T : class
 {
     private readonly ServiceCollection _services = [];
     private ServiceProvider? _serviceProvider;

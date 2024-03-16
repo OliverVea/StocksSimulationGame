@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Persistence;
 
-internal class ProjectDbContext(DbContextOptions<ProjectDbContext> options) : DbContext(options), IDbContext
+internal sealed class ProjectDbContext(DbContextOptions<ProjectDbContext> options) : DbContext(options), IDbContext
 {
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -20,10 +20,6 @@ internal class ProjectDbContext(DbContextOptions<ProjectDbContext> options) : Db
             entity.HasIndex(e => e.SimulationStep);
         });
 
-        modelBuilder.Entity<CurrentSimulationStep>(entity =>
-        {
-        });
-
         base.OnModelCreating(modelBuilder);
     }
 
@@ -32,4 +28,5 @@ internal class ProjectDbContext(DbContextOptions<ProjectDbContext> options) : Db
     public required DbSet<CurrentSimulationStep> CurrentSimulationSteps { get; init; }
     public required DbSet<UserInformation> UserInformation { get; init; }
     public required DbSet<Ask> Asks { get; init; }
+    public required DbSet<UserPortfolioStock> UserPortfolioStocks { get; init; }
 }

@@ -5,7 +5,7 @@ using Persistence.Entities;
 
 namespace Persistence.Repositories;
 
-internal class SimulationStepStorageRepository(IDbContext dbContext) : ISimulationStepStorageRepository
+internal sealed class SimulationStepStorageRepository(IDbContext dbContext) : ISimulationStepStorageRepository
 {
     private SimulationStep? _currentSimulationStep;
 
