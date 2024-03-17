@@ -17,6 +17,7 @@ public static class ServiceExtensions
         services.AddScoped<IUserIdService, UserIdService>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IAskService, AskService>();
+        services.AddScoped<ITradeResolutionService, TradeResolutionService>();
         
         services.AddHostedService<SimulationSteppingJob>();
 

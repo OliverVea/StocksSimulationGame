@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Moq;
+using NSubstitute;
 
 namespace Tests;
 
@@ -9,15 +9,11 @@ public sealed class SutBuilder<T> where T : class
     private ServiceProvider? _serviceProvider;
     private ServiceProvider ServiceProvider => _serviceProvider ??= BuildServiceProvider();
 
-    public Mock<TService> AddMock<TService>(Action<Mock<TService>>? setup = null) where TService : class
+    public TService AddSubstitute<TService>() where TService : class
     {
-        var mock = new Mock<TService>();
-
-        setup?.Invoke(mock);
-
-        _services.AddSingleton(mock.Object);
-
-        return mock;
+        var substitute = Substitute.For<TService>();
+        _services.AddSingleton(substitute);
+        return substitute;
     }
 
     public TService GetService<TService>() where TService : notnull

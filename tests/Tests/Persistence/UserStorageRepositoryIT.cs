@@ -1,6 +1,7 @@
 ﻿using AutoFixture;
 using Core.Repositories;
 using NUnit.Framework;
+using Tests.DataBuilders;
 
 namespace Tests.Persistence;
 
@@ -28,7 +29,7 @@ public sealed class UserStorageRepositoryIT : BaseIT<IUserStorageRepository>
         
         // Act
         await Sut.AddUserAsync(user, CancellationToken);
-        var actual = await Sut.GetUserAsync(user.Id, CancellationToken);
+        var actual = await Sut.GetUserAsync(user.UserId, CancellationToken);
 
         // Assert
         Assert.That(actual, Is.EqualTo(user));
@@ -46,7 +47,7 @@ public sealed class UserStorageRepositoryIT : BaseIT<IUserStorageRepository>
         {
             await Sut.AddUserAsync(u, CancellationToken);
         }
-        var actual = await Sut.GetUserAsync(user.Id, CancellationToken);
+        var actual = await Sut.GetUserAsync(user.UserId, CancellationToken);
 
         // Assert
         Assert.That(actual, Is.EqualTo(user));

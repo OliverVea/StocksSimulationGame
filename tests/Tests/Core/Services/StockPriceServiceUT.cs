@@ -2,19 +2,20 @@
 using Core.Models.Prices;
 using Core.Repositories;
 using Core.Services;
-using Moq;
+using NSubstitute;
 using NUnit.Framework;
+using Tests.DataBuilders;
 
 namespace Tests.Core;
 
 public sealed class StockPriceServiceUT : BaseUT<IStockPriceService, StockPriceService>
 {
-    private Mock<IStockPriceStorageRepository> _stockPriceStorageRepositoryMock = null!;
+    private IStockPriceStorageRepository _stockPriceStorageRepositoryMock = null!;
     
     [SetUp]
     public void Setup()
     {
-        _stockPriceStorageRepositoryMock = SutBuilder.AddMock<IStockPriceStorageRepository>();
+        _stockPriceStorageRepositoryMock = SutBuilder.AddSubstitute<IStockPriceStorageRepository>();
     }
     
     [Test]
@@ -22,7 +23,8 @@ public sealed class StockPriceServiceUT : BaseUT<IStockPriceService, StockPriceS
     {
         // Arrange
         var request = DataBuilder.GetStockPriceInIntervalRequest().Create();
-        var response = DataBuilder.GetStockPricesResponse().With(x => x.StockPrices, []).Create();
+        var response = DataBuilder.GetStockPricesResponse(stockPrices: []).Create();
+        
         MockGetStockPricesAsync(response);
         
         // Act
@@ -39,7 +41,7 @@ public sealed class StockPriceServiceUT : BaseUT<IStockPriceService, StockPriceS
         var request = DataBuilder.GetStockPriceInIntervalRequest().Create();
         
         var stockPrice = DataBuilder.GetStockPriceResponse().Create();
-        var response = DataBuilder.GetStockPricesResponse([stockPrice]).Create();
+        var response = DataBuilder.GetStockPricesResponse(stockPrices: [stockPrice]).Create();
         MockGetStockPricesAsync(response);
         
         // Act
@@ -76,20 +78,23 @@ public sealed class StockPriceServiceUT : BaseUT<IStockPriceService, StockPriceS
         await Sut.SetStockPricesAsync(request, CancellationToken.None);
         
         // Assert
-        VerifySetStockPricesAsync(x => Equals(x.StockPrices, request.StockPrices), Times.Once);
+        VerifySetStockPricesAsync(x => Equals(x.StockPrices, request.StockPrices), 1);
     }
     
     private void MockGetStockPricesAsync(GetStockPriceInIntervalResponse inIntervalResponse)
     {
-        _stockPriceStorageRepositoryMock.Setup(x => x.GetStockPriceInIntervalAsync(
-                It.IsAny<GetStockPriceInIntervalRequest>(),
-                CancellationToken))
-            .ReturnsAsync(inIntervalResponse);
+        _stockPriceStorageRepositoryMock.GetStockPriceInIntervalAsync(
+                Arg.Any<GetStockPriceInIntervalRequest>(),
+                CancellationToken)
+            .Returns(inIntervalResponse);
     }
     
-    private void VerifySetStockPricesAsync(Func<SetStockPricesRequest, bool> match, Func<Times> times)
+    private void VerifySetStockPricesAsync(Func<SetStockPricesRequest, bool> match, int calls)
     {
-        _stockPriceStorageRepositoryMock.Verify(x => x.SetStockPricesAsync(
-            It.Is<SetStockPricesRequest>(r => match(r)), CancellationToken.None), times);
+        _stockPriceStorageRepositoryMock
+            .Received(calls)
+            .SetStockPricesAsync(
+                Arg.Is<SetStockPricesRequest>(r => match(r)),
+                CancellationToken);
     }
 }

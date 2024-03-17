@@ -42,12 +42,16 @@ internal sealed class StockPriceStorageRepository(IDbContext dbContext) : IStock
 
     public async Task<GetStockPricesForStepResponse> GetStockPricesForStepAsync(GetStockPricesForStepRequest request, CancellationToken cancellationToken)
     {
-        var stockGuids = request.StockIds.Select(x => x.Id).ToArray();
+        var query = dbContext.StockPrices
+            .Where(x => x.SimulationStep == request.SimulationStep.Step);
         
-        var stockPrices = await dbContext.StockPrices
-            .Where(x => stockGuids.Contains(x.StockId) && x.SimulationStep == request.SimulationStep.Step)
-            .Select(x => Map(x))
-            .ToArrayAsync(cancellationToken);
+        if (request.StockIds is not null)
+        {
+            var stockGuids = request.StockIds.Select(x => x.Id).ToArray();
+            query = query.Where(x => stockGuids.Contains(x.StockId));
+        }
+        
+        var stockPrices = await query.Select(x => Map(x)).ToArrayAsync(cancellationToken);
 
         return new GetStockPricesForStepResponse
         {

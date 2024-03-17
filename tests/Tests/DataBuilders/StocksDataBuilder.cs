@@ -1,23 +1,36 @@
-﻿using AutoFixture;
+﻿using System.Diagnostics.CodeAnalysis;
+using AutoFixture;
 using AutoFixture.Dsl;
 using Core.Models.Ids;
 using Core.Models.Stocks;
+using Tests.Extensions;
 
 namespace Tests.DataBuilders;
 
-public sealed partial class DataBuilder
+[SuppressMessage("ReSharper", "MethodOverloadWithOptionalParameter")]
+public static partial class DataBuilder
 {
-    public IPostprocessComposer<AddStocksRequest> AddStocksRequest()
+    public static IPostprocessComposer<AddStocksRequest> AddStocksRequest()
     {
-        return Fixture.Build<AddStocksRequest>();
+        return Fixture.Build<AddStocksRequest>()
+            .With(x => x.ErrorIfDuplicate, false);
     }
     
-    public IPostprocessComposer<StockId> StockId()
+    public static IPostprocessComposer<AddStocksRequest> AddStocksRequest(bool errorIfDuplicate = false)
+    {
+        var request = AddStocksRequest();
+        
+        if (errorIfDuplicate) request = request.With(x => x.ErrorIfDuplicate, true);
+        
+        return request;
+    }
+    
+    public static IPostprocessComposer<StockId> StockId()
     {
         return Fixture.Build<StockId>();
     }
     
-    public IPostprocessComposer<AddStockRequest> AddStockRequest()
+    public static IPostprocessComposer<AddStockRequest> AddStockRequest()
     {
         return Fixture.Build<AddStockRequest>()
             .With(x => x.StockId, () => new StockId(Guid.NewGuid()))
@@ -26,22 +39,22 @@ public sealed partial class DataBuilder
             .With(x => x.Ticker);
     }
     
-    public IPostprocessComposer<AddStocksResponse> AddStocksResponse()
+    public static IPostprocessComposer<AddStocksResponse> AddStocksResponse()
     {
         return Fixture.Build<AddStocksResponse>();
     }
 
-    public IPostprocessComposer<ListStocksRequest> ListStocksRequest()
+    public static IPostprocessComposer<ListStocksRequest> ListStocksRequest()
     {
         return Fixture.Build<ListStocksRequest>();
     }
     
-    public IPostprocessComposer<ListStocksResponse> ListStocksResponse()
+    public static IPostprocessComposer<ListStocksResponse> ListStocksResponse()
     {
         return Fixture.Build<ListStocksResponse>();
     }
     
-    public IPostprocessComposer<ListStockResponse> ListStockResponse()
+    public static IPostprocessComposer<ListStockResponse> ListStockResponse()
     {
         return Fixture.Build<ListStockResponse>()
             .With(x => x.StockId, () => new StockId(Guid.NewGuid()))
@@ -50,13 +63,24 @@ public sealed partial class DataBuilder
             .With(x => x.Ticker);
     }
 
-    public IPostprocessComposer<DeleteStocksRequest> DeleteStocksRequest()
+    public static IPostprocessComposer<DeleteStocksRequest> DeleteStocksRequest()
     {
         return Fixture.Build<DeleteStocksRequest>()
-            .With(x => x.StockIds, () => StockId().CreateMany(3).ToHashSet());
+            .WithEmpty(x => x.StockIds);
+    }
+
+    public static IPostprocessComposer<DeleteStocksRequest> DeleteStocksRequest(IReadOnlySet<StockId>? stockIds = null, int? stockIdCount = null, bool errorIfMissing = false)
+    {
+        var request = DeleteStocksRequest();
+        
+        if (stockIdCount != null) request = request.With(x => x.StockIds, StockId().CreateMany(stockIdCount.Value).ToHashSet());
+        if (stockIds != null) request = request.With(x => x.StockIds, stockIds);
+        if (errorIfMissing) request = request.With(x => x.ErrorIfMissing, true);
+        
+        return request;
     }
     
-    public IPostprocessComposer<DeleteStocksResponse> DeleteStocksResponse()
+    public static IPostprocessComposer<DeleteStocksResponse> DeleteStocksResponse()
     {
         return Fixture.Build<DeleteStocksResponse>();
     }

@@ -1,4 +1,6 @@
 ﻿using Core.Models.Asks;
+using Core.Models.Ids;
+using Core.Models.Prices;
 
 namespace Core.Services;
 

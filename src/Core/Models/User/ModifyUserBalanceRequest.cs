@@ -2,8 +2,8 @@
 
 namespace Core.Models.User;
 
-public sealed record UserInformation
+public sealed record ModifyUserBalanceRequest
 {
     public required UserId UserId { get; init; }
-    public required UserBalance Balance { get; init; }
-}
+    public required UserBalance Change { get; init; }
+};

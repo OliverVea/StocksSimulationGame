@@ -7,8 +7,6 @@ namespace Tests;
 public abstract class BaseUT<TContract, TImplementation> where TImplementation : class, TContract
 {
     protected readonly CancellationToken CancellationToken = new();
-    
-    protected readonly DataBuilder DataBuilder = new();
 
     private SutBuilder<TImplementation>? _sutBuilder;
     protected SutBuilder<TImplementation> SutBuilder => _sutBuilder ?? throw new InvalidOperationException("SutBuilder not initialized");

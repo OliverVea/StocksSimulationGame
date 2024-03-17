@@ -5,14 +5,12 @@ using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using Persistence;
 using Persistence.Configuration;
-using Tests.DataBuilders;
 
 namespace Tests;
 
 [Category("Integration Test")]
 public abstract class BaseIT<TSut> where TSut : notnull
 {
-    protected readonly DataBuilder DataBuilder = new();
     protected CancellationTokenSource CancellationTokenSource = new();
     protected CancellationToken CancellationToken => CancellationTokenSource.Token;
 
@@ -59,7 +57,7 @@ public abstract class BaseIT<TSut> where TSut : notnull
 
     protected UserId WithUserId()
     {
-        const string userId = "user-id";
+        var userId = Guid.NewGuid().ToString();
         GetService<IUserIdService>().Initialize(userId);
         return GetService<IUserIdService>().UserId ?? throw new NotSupportedException();
     }

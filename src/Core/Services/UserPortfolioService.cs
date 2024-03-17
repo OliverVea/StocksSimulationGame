@@ -49,6 +49,15 @@ public sealed class UserPortfolioService(ILogger<UserPortfolioService> logger, I
 
     public async Task<OneOf<Success, Error>> RemoveFromPortfolioAsync(RemoveFromPortfolioRequest request, CancellationToken cancellationToken)
     {
+        request = request with
+        {
+            Stocks = request.Stocks.GroupBy(x => x.StockId).Select(x => new RemoveStockFromPortfolio
+            {
+                StockId = x.Key,
+                Quantity = x.Sum(y => y.Quantity)
+            }).ToArray()
+        };
+        
         var getRequest = new GetUserPortfolioRequest
         {
             UserId = request.UserId,
@@ -56,8 +65,11 @@ public sealed class UserPortfolioService(ILogger<UserPortfolioService> logger, I
         };
         
         var existingStocks = await GetUserPortfolioAsync(getRequest, cancellationToken);
+        var invalidAsks = existingStocks.Stocks
+            .Where(x => HigherQuantityThanAvailable(request, x))
+            .ToArray();
         
-        if (existingStocks.Stocks.Any(x => x.Quantity < request.Stocks.First(y => y.StockId == x.StockId).Quantity))
+        if (invalidAsks.Any())
         {
             logger.LogWarning("User {UserId} attempted to remove more stocks than they own", request.UserId);
             return new Error();
@@ -84,6 +96,13 @@ public sealed class UserPortfolioService(ILogger<UserPortfolioService> logger, I
         await repository.SetPortfolioAsync(setRequest, cancellationToken);
         
         return new Success();
+    }
+
+    private static bool HigherQuantityThanAvailable(RemoveFromPortfolioRequest request, GetUserPortfolioStock userPortfolioStock)
+    {
+        var requestStock = request.Stocks.First(x => x.StockId == userPortfolioStock.StockId);
+        
+        return requestStock.Quantity > userPortfolioStock.Quantity;
     }
 
     public Task<GetUserPortfolioResponse> GetUserPortfolioAsync(GetUserPortfolioRequest request, CancellationToken cancellationToken)

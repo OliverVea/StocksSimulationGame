@@ -19,7 +19,9 @@ internal sealed class AskStorageRepository(IDbContext dbContext) : IAskStorageRe
 
     public async Task<GetAsksResponse> GetAsksAsync(GetAsksRequest request, CancellationToken cancellationToken)
     {
-        var query = dbContext.Asks.Where(e => e.UserId == request.UserId.Id);
+        var query = dbContext.Asks.AsQueryable();
+            
+        if (request.UserId is {} userId) query = query.Where(e => e.UserId == userId.Id);
         
         if (request.AskIds is {} askIds) 
         {
@@ -27,9 +29,11 @@ internal sealed class AskStorageRepository(IDbContext dbContext) : IAskStorageRe
             query = query.Where(e => askIdGuids.Contains(e.AskId));
         }
         
-        var entities = await query.ToArrayAsync(cancellationToken);
+        if (request.StockId is {} stockId) query = query.Where(e => e.StockId == stockId.Id);
         
-        return Map(request.UserId, entities);
+        if (request.MinPrice is {} minPrice) query = query.Where(e => e.PricePerUnit >= minPrice.Value);
+        
+        return Map(await query.ToArrayAsync(cancellationToken));
     }
 
     public Task DeleteAsksAsync(DeleteAsksRequest request, CancellationToken cancellationToken)
@@ -56,20 +60,19 @@ internal sealed class AskStorageRepository(IDbContext dbContext) : IAskStorageRe
         };
     }
 
-    private static GetAsksResponse Map(UserId userId, IEnumerable<Entities.Ask> entities)
+    private static GetAsksResponse Map(IEnumerable<Entities.Ask> entities)
     {
         return new GetAsksResponse
         {
-            UserId = userId,
-            Asks = entities.Select(x => Map(x, userId)).ToArray(),
+            Asks = entities.Select(Map).ToArray(),
         };
     }
 
-    private static Ask Map(Entities.Ask entity, UserId userId)
+    private static Ask Map(Entities.Ask entity)
     {
         return new Ask
         {
-            UserId = userId,
+            UserId = new UserId(entity.UserId),
             AskId = new AskId(entity.AskId),
             StockId = new StockId(entity.StockId),
             Amount = entity.Amount,

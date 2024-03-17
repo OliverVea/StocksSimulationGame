@@ -3,27 +3,29 @@ using Core.Models.Ids;
 using Core.Models.Stocks;
 using Core.Repositories;
 using Core.Services;
-using Moq;
+using NSubstitute;
 using NUnit.Framework;
+using Tests.DataBuilders;
 
 namespace Tests.Core;
 
 public sealed class StockServiceUT : BaseUT<IStockService, StockService>
 {
+    private IStockStorageRepository _stockStorageRepository = null!;
+    
+    [SetUp]
+    public void Setup()
+    {
+        _stockStorageRepository = SutBuilder.AddSubstitute<IStockStorageRepository>();
+    }
+    
     [Test]
     public async Task AddStocksAsync_NoDuplicates_ReturnsAddStocksResponse()
     {
         // Arrange
         var request = DataBuilder.AddStocksRequest().Create();
-        var existingStocks = DataBuilder.ListStocksResponse()
-            .With(x => x.Stocks, Array.Empty<ListStockResponse>())
-            .Create();
-
-        SutBuilder.AddMock<IStockStorageRepository>(
-            mock => mock.Setup(x => x.ListStocksWithIdsAsync(
-                    It.IsAny<ListStocksWithIdsRequest>(),
-                    CancellationToken))
-                .ReturnsAsync(existingStocks));
+        
+        MockListStocksWithIdsAsync([]);
         
         // Act
         var actual = await Sut.AddStocksAsync(request, CancellationToken.None);
@@ -39,15 +41,10 @@ public sealed class StockServiceUT : BaseUT<IStockService, StockService>
     public async Task AddStocksAsync_WithDuplicatesAndThrowErrorFalse_ReturnsAddStocksResponse()
     {
         // Arrange
-        var request = DataBuilder.AddStocksRequest()
-            .With(x => x.ErrorIfDuplicate, false).Create();
+        var request = DataBuilder.AddStocksRequest(errorIfDuplicate: false).Create();
         var existingStocks = DataBuilder.ListStocksResponse().Create();
-
-        SutBuilder.AddMock<IStockStorageRepository>(
-            mock => mock.Setup(x => x.ListStocksWithIdsAsync(
-                    It.IsAny<ListStocksWithIdsRequest>(),
-                    CancellationToken))
-                .ReturnsAsync(existingStocks));
+        
+        MockListStocksWithIdsAsync(existingStocks);
         
         // Act
         var actual = await Sut.AddStocksAsync(request, CancellationToken.None);
@@ -63,15 +60,10 @@ public sealed class StockServiceUT : BaseUT<IStockService, StockService>
     public void AddStocksAsync_WithDuplicatesAndThrowErrorTrue_ThrowsInvalidOperationException()
     {
         // Arrange
-        var request = DataBuilder.AddStocksRequest()
-            .With(x => x.ErrorIfDuplicate, true).Create();
+        var request = DataBuilder.AddStocksRequest(errorIfDuplicate: true).Create();
         var existingStocks = DataBuilder.ListStocksResponse().Create();
-
-        SutBuilder.AddMock<IStockStorageRepository>(
-            mock => mock.Setup(x => x.ListStocksWithIdsAsync(
-                    It.IsAny<ListStocksWithIdsRequest>(),
-                    CancellationToken))
-                .ReturnsAsync(existingStocks));
+        
+        MockListStocksWithIdsAsync(existingStocks);
         
         // Act
         var ex = Assert.ThrowsAsync<InvalidOperationException>(
@@ -87,16 +79,8 @@ public sealed class StockServiceUT : BaseUT<IStockService, StockService>
         // Arrange
         var request = DataBuilder.DeleteStocksRequest().Create();
         var existingStocks = GetListStockResponsesWithIds(request.StockIds);
-        var listStocksResponse = DataBuilder.ListStocksResponse().With(x => x.Stocks, existingStocks).Create();
-
-        SutBuilder.AddMock<IStockStorageRepository>(
-            mock =>
-            {
-                mock.Setup(x => x.ListStocksWithIdsAsync(
-                        It.IsAny<ListStocksWithIdsRequest>(),
-                        CancellationToken))
-                    .ReturnsAsync(listStocksResponse);
-            });
+        
+        MockListStocksWithIdsAsync(existingStocks);
         
         // Act
         var actual = await Sut.DeleteStocksAsync(request, CancellationToken.None);
@@ -112,14 +96,9 @@ public sealed class StockServiceUT : BaseUT<IStockService, StockService>
     public async Task DeleteStocksAsync_WithMissingStocksAndThrowErrorFalse_ReturnsDeleteStocksResponse()
     {
         // Arrange
-        var request = DataBuilder.DeleteStocksRequest().With(x => x.ErrorIfMissing, false).Create();
-        var existingStocks = DataBuilder.ListStocksResponse().With(x => x.Stocks, Array.Empty<ListStockResponse>()).Create();
-
-        SutBuilder.AddMock<IStockStorageRepository>(
-            mock => mock.Setup(x => x.ListStocksWithIdsAsync(
-                    It.IsAny<ListStocksWithIdsRequest>(),
-                    CancellationToken))
-                .ReturnsAsync(existingStocks));
+        var request = DataBuilder.DeleteStocksRequest(stockIdCount: 1, errorIfMissing: false).Create();
+        
+        MockListStocksWithIdsAsync([]);
         
         // Act
         var actual = await Sut.DeleteStocksAsync(request, CancellationToken.None);
@@ -132,16 +111,9 @@ public sealed class StockServiceUT : BaseUT<IStockService, StockService>
     public void DeleteStocksAsync_WithMissingStocksAndThrowErrorTrue_ThrowsInvalidOperationException()
     {
         // Arrange
-        var request = DataBuilder.DeleteStocksRequest().With(x => x.ErrorIfMissing, true).Create();
-        var existingStocks = DataBuilder.ListStocksResponse()
-            .With(x => x.Stocks, Array.Empty<ListStockResponse>())
-            .Create();
+        var request = DataBuilder.DeleteStocksRequest(stockIdCount: 1, errorIfMissing: true).Create();
 
-        SutBuilder.AddMock<IStockStorageRepository>(
-            mock => mock.Setup(x => x.ListStocksWithIdsAsync(
-                    It.IsAny<ListStocksWithIdsRequest>(),
-                    CancellationToken))
-                .ReturnsAsync(existingStocks));
+        MockListStocksWithIdsAsync([]);
         
         // Act
         var ex = Assert.ThrowsAsync<InvalidOperationException>(
@@ -150,9 +122,23 @@ public sealed class StockServiceUT : BaseUT<IStockService, StockService>
         // Assert
         Assert.That(ex?.Message, Is.EqualTo("Tickets with the following ids do not exist: " + string.Join(", ", request.StockIds)));
     }
+
+    private void MockListStocksWithIdsAsync(IEnumerable<ListStockResponse> responses)
+    {
+        var response = DataBuilder.ListStocksResponse().With(x => x.Stocks, responses).Create();
+        MockListStocksWithIdsAsync(response);
+    }
+
+    private void MockListStocksWithIdsAsync(ListStocksResponse response)
+    {
+        _stockStorageRepository.ListStocksWithIdsAsync(
+                Arg.Any<ListStocksWithIdsRequest>(),
+                CancellationToken)
+            .Returns(response);
+    }
     
     
-    private IEnumerable<ListStockResponse> GetListStockResponsesWithIds(IReadOnlyCollection<StockId> stockIds)
+    private IEnumerable<ListStockResponse> GetListStockResponsesWithIds(IEnumerable<StockId> stockIds)
     {
         List<ListStockResponse> listStockResponses = [];
         

@@ -1,6 +1,7 @@
 ﻿using AutoFixture;
 using Core.Repositories;
 using NUnit.Framework;
+using Tests.DataBuilders;
 
 namespace Tests.Persistence;
 

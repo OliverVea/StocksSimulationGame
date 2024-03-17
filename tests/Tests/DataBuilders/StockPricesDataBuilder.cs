@@ -1,59 +1,86 @@
 ﻿using AutoFixture;
 using AutoFixture.Dsl;
+using Core.Models;
 using Core.Models.Prices;
+using Tests.Extensions;
 
 namespace Tests.DataBuilders;
 
-public sealed partial class DataBuilder
+public static partial class DataBuilder
 {
-    public IPostprocessComposer<GetStockPriceInIntervalRequest> GetStockPriceInIntervalRequest()
+    public static IPostprocessComposer<GetStockPriceInIntervalRequest> GetStockPriceInIntervalRequest()
     {
         return Fixture.Build<GetStockPriceInIntervalRequest>()
             .With(x => x.From, SimulationStep(0).Create())
             .With(x => x.To, SimulationStep(int.MaxValue).Create());
     }
     
-    public IPostprocessComposer<GetStockPriceInIntervalResponse> GetStockPricesResponse(IEnumerable<GetStockPriceResponse> stockPrices)
+    public static IPostprocessComposer<GetStockPriceInIntervalResponse> GetStockPricesResponse(IEnumerable<GetStockPriceResponse> stockPrices)
     {
         return GetStockPricesResponse().With(x => x.StockPrices, stockPrices);
     }
     
-    public IPostprocessComposer<GetStockPriceInIntervalResponse> GetStockPricesResponse()
+    public static IPostprocessComposer<GetStockPriceInIntervalResponse> GetStockPricesResponse()
     {
         return Fixture.Build<GetStockPriceInIntervalResponse>();
     }
     
-    public IPostprocessComposer<GetStockPriceResponse> GetStockPriceResponse()
+    public static IPostprocessComposer<GetStockPriceResponse> GetStockPriceResponse()
     {
         return Fixture.Build<GetStockPriceResponse>();
     }
+
+    public static IPostprocessComposer<GetStockPricesForStepResponse> GetStockPricesForStepResponse()
+    {
+        return Fixture.Build<GetStockPricesForStepResponse>()
+            .WithEmpty(x => x.StockPrices);
+    }
+
+    public static IPostprocessComposer<GetStockPricesForStepResponse> GetStockPricesForStepResponse(
+        int? stockPriceCount = null,
+        SimulationStep? simulationStep = null)
+    {
+        var response = GetStockPricesForStepResponse();
+
+        if (stockPriceCount is not null)
+        {
+            var stockPricesResponse = GetStockPriceResponse();
+
+            if (simulationStep is not null) stockPricesResponse.With(x => x.Step, simulationStep);
+            
+            var stockPrices = stockPricesResponse.CreateMany(stockPriceCount.Value).ToArray();
+            response = response.With(x => x.StockPrices, stockPrices);
+        }
+
+        return response;
+    }
     
-    public IPostprocessComposer<SetStockPricesRequest> SetStockPricesRequest()
+    public static IPostprocessComposer<SetStockPricesRequest> SetStockPricesRequest()
     {
         return Fixture.Build<SetStockPricesRequest>();
     }
     
-    public IPostprocessComposer<SetStockPriceRequest> SetStockPriceRequest()
+    public static IPostprocessComposer<SetStockPriceRequest> SetStockPriceRequest()
     {
         return Fixture.Build<SetStockPriceRequest>();
     }
     
-    public IPostprocessComposer<DeleteStockPricesRequest> DeleteStockPricesRequest()
+    public static IPostprocessComposer<DeleteStockPricesRequest> DeleteStockPricesRequest()
     {
         return Fixture.Build<DeleteStockPricesRequest>();
     }
     
-    public IPostprocessComposer<DeleteStockPriceRequest> DeleteStockPriceRequest()
+    public static IPostprocessComposer<DeleteStockPriceRequest> DeleteStockPriceRequest()
     {
         return Fixture.Build<DeleteStockPriceRequest>();
     }
     
-    public IPostprocessComposer<DeleteStockPricesResponse> DeleteStockPricesResponse()
+    public static IPostprocessComposer<DeleteStockPricesResponse> DeleteStockPricesResponse()
     {
         return Fixture.Build<DeleteStockPricesResponse>();
     }
     
-    public IPostprocessComposer<DeleteStockPriceResponse> DeleteStockPriceResponse()
+    public static IPostprocessComposer<DeleteStockPriceResponse> DeleteStockPriceResponse()
     {
         return Fixture.Build<DeleteStockPriceResponse>();
     }

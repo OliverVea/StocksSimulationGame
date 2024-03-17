@@ -2,7 +2,7 @@
 
 namespace Tests.DataBuilders;
 
-public sealed partial class DataBuilder
+public static partial class DataBuilder
 {
     private static readonly Fixture Fixture = new();
     private static readonly Random Random = new();

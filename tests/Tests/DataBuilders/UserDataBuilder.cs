@@ -4,19 +4,19 @@ using Core.Models.User;
 
 namespace Tests.DataBuilders;
 
-public sealed partial class DataBuilder
+public static partial class DataBuilder
 {
-    public IPostprocessComposer<UserId> UserId()
+    public static IPostprocessComposer<UserId> UserId()
     {
         return Fixture.Build<UserId>();
     }
     
-    public IPostprocessComposer<UserId> UserId(string id)
+    public static IPostprocessComposer<UserId> UserId(string id)
     {
         return UserId().With(x => x.Id, id);
     }
 
-    public IPostprocessComposer<UserInformation> UserInformation()
+    public static IPostprocessComposer<UserInformation> UserInformation()
     {
         return Fixture.Build<UserInformation>();
     }

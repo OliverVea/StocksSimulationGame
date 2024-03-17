@@ -7,6 +7,7 @@
     <PackageVersion Include="Aspire.Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0-preview.4.24156.9" />
     <PackageVersion Include="AutoFixture" Version="4.18.1" />
     <PackageVersion Include="Meziantou.Analyzer" Version="2.0.145" />
+    <PackageVersion Include="NSubstitute" Version="5.1.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.3" />
     <PackageVersion Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4" />
     <PackageVersion Include="Microsoft.Data.Sqlite.Core" Version="8.0.3" />

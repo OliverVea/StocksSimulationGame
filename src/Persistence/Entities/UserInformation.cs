@@ -7,5 +7,5 @@ internal sealed class UserInformation : BaseEntity
     [MaxLength(PersistenceConstants.MaxUserIdLength)]
     public required string UserId { get; init; }
     
-    public required decimal Balance { get; init; }
+    public required float Balance { get; set; }
 }

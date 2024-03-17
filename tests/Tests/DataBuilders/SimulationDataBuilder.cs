@@ -3,14 +3,14 @@ using Core.Models;
 
 namespace Tests.DataBuilders;
 
-public sealed partial class DataBuilder
+public static partial class DataBuilder
 {
-    public IPostprocessComposer<SimulationStep> SimulationStep()
+    public static IPostprocessComposer<SimulationStep> SimulationStep()
     {
         return Fixture.Build<SimulationStep>();
     }
     
-    public IPostprocessComposer<SimulationStep> SimulationStep(int step)
+    public static IPostprocessComposer<SimulationStep> SimulationStep(int step)
     {
         return SimulationStep().With(x => x.Step, step);
     }

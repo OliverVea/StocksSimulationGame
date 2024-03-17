@@ -16,5 +16,5 @@ public sealed record GetUserResponseModel
     public decimal Balance { get; init; }
     
     internal GetUserResponseModel(Core.Models.User.UserInformation user) =>
-        (Id, Balance) = (user.Id.Id, user.Balance.Value);
+        (Id, Balance) = (user.UserId.Id, user.Balance.Value);
 }

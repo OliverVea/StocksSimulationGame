@@ -32,20 +32,17 @@ public sealed class AskService(ILogger<AskService> logger, IAskStorageRepository
 
     public async Task DeleteAsksAsync(DeleteAsksRequest request, CancellationToken cancellationToken)
     {
-        var existingRequest = new GetAsksRequest { UserId = request.UserId, AskIds = request.AskIds };
+        var existingRequest = new GetAsksRequest { AskIds = request.AskIds };
         var existingAsks = await storageRepository.GetAsksAsync(existingRequest, cancellationToken);
         
         var missing = request.AskIds.Except(existingAsks.Asks.Select(a => a.AskId)).ToArray();
         
         if (missing.Any())
         {
-            logger.LogWarning("User {UserId} tried to delete Asks with the following ids {MissingAsks}", request.UserId, missing);
+            logger.LogWarning("Tried to delete Asks with the following ids {MissingAsks}", missing);
         }
 
-        request = request with
-        {
-            AskIds = request.AskIds.Except(missing).ToArray()
-        };
+        request = new DeleteAsksRequest { AskIds = request.AskIds.Except(missing).ToArray() };
         
         await storageRepository.DeleteAsksAsync(request, cancellationToken);
     }

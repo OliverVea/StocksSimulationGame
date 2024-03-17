@@ -8,4 +8,5 @@ public interface IUserService
 {
     Task<UserInformation?> GetUserAsync(CancellationToken cancellationToken);
     Task<OneOf<UserInformation, NotFound, AlreadyExists>> CreateUserAsync(CancellationToken cancellationToken);
+    Task<OneOf<Success, Error>> ModifyUserBalanceAsync(ModifyUserBalanceRequest request, CancellationToken cancellationToken);
 }

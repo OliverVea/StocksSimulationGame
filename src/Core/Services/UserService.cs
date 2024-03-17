@@ -34,7 +34,7 @@ public sealed class UserService(ILogger<UserService> logger, IUserIdService user
         var user = new UserInformation
         {
             Balance = Constants.StartingBalance,
-            Id = userId
+            UserId = userId
         };
         
         await userStorageRepository.AddUserAsync(user, cancellationToken);
@@ -42,5 +42,27 @@ public sealed class UserService(ILogger<UserService> logger, IUserIdService user
         logger.LogInformation("User created. UserId: {UserId}", userId);
         
         return user;
+    }
+
+    public async Task<OneOf<Success, Error>> ModifyUserBalanceAsync(ModifyUserBalanceRequest request, CancellationToken cancellationToken)
+    {
+        var userInformation = await userStorageRepository.GetUserAsync(request.UserId, cancellationToken);
+        if (userInformation is null)
+        {
+            logger.LogError("User not found. UserId: {UserId}", request.UserId);
+            return new Error();
+        }
+        
+        userInformation = userInformation with { Balance = userInformation.Balance + request.Change };
+        
+        if (userInformation.Balance < 0)
+        {
+            logger.LogError("User balance cannot be negative. UserId: {UserId}", request.UserId);
+            return new Error();
+        }
+        
+        await userStorageRepository.UpdateUserAsync(userInformation, cancellationToken);
+
+        return new Success();
     }
 }

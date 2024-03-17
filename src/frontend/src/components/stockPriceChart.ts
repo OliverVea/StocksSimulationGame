@@ -2,7 +2,6 @@ import StockPriceService from '../services/stockPriceService';
 
 import { Chart, CategoryScale, LinearScale, BarElement, LineController, PointElement, LineElement } from 'chart.js';
 import StocksService from '../services/stocksService';
-import { s } from 'vite/dist/node/types.d-jgA8ss1A';
 
 // Register the components
 Chart.register(CategoryScale, LinearScale, BarElement, LineController, PointElement, LineElement);

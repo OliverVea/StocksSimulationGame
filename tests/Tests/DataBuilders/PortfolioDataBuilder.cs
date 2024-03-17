@@ -1,18 +1,19 @@
 ﻿using AutoFixture.Dsl;
 using Core.Models.Ids;
 using Core.Models.Portfolio;
+using Tests.Extensions;
 
 namespace Tests.DataBuilders;
 
-public sealed partial class DataBuilder
+public static partial class DataBuilder
 {
-    public IPostprocessComposer<GetUserPortfolioRequest> GetUserPortfolioRequest()
+    public static IPostprocessComposer<GetUserPortfolioRequest> GetUserPortfolioRequest()
     {
         return Fixture.Build<GetUserPortfolioRequest>()
-            .With(x => x.StockIds, Array.Empty<StockId>());
+            .WithEmpty(x => x.StockIds);
     }
     
-    public IPostprocessComposer<GetUserPortfolioRequest> GetUserPortfolioRequest(UserId userId, IReadOnlyCollection<StockId>? stockIds = null)
+    public static IPostprocessComposer<GetUserPortfolioRequest> GetUserPortfolioRequest(UserId userId, IReadOnlyCollection<StockId>? stockIds = null)
     {
         var request = GetUserPortfolioRequest();
             
@@ -22,13 +23,13 @@ public sealed partial class DataBuilder
         return request;
     }
 
-    public IPostprocessComposer<SetPortfolioRequest> SetPortfolioRequest()
+    public static IPostprocessComposer<SetPortfolioRequest> SetPortfolioRequest()
     {
         return Fixture.Build<SetPortfolioRequest>()
-            .With(x => x.Stocks, Array.Empty<SetPortfolioStock>());
+            .WithEmpty(x => x.Stocks);
     }
     
-    public IPostprocessComposer<SetPortfolioRequest> SetPortfolioRequest(UserId userId, IReadOnlyCollection<SetPortfolioStock>? stocks = null)
+    public static IPostprocessComposer<SetPortfolioRequest> SetPortfolioRequest(UserId userId, IReadOnlyCollection<SetPortfolioStock>? stocks = null)
     {
         var request = SetPortfolioRequest();
             
@@ -38,13 +39,13 @@ public sealed partial class DataBuilder
         return request;
     }
 
-    public IPostprocessComposer<SetPortfolioStock> SetPortfolioStock()
+    public static IPostprocessComposer<SetPortfolioStock> SetPortfolioStock()
     {
         return Fixture.Build<SetPortfolioStock>()
             .With(x => x.Quantity, () => GetRandomInt(1, int.MaxValue));
     }
 
-    public IPostprocessComposer<SetPortfolioStock> SetPortfolioStock(StockId stockId, int? quantity = null)
+    public static IPostprocessComposer<SetPortfolioStock> SetPortfolioStock(StockId stockId, int? quantity = null)
     {
         var stock = SetPortfolioStock();
             

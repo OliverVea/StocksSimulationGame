@@ -6,5 +6,11 @@
     Target = "~N:Tests.DataBuilders")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage(
     "Design",
+    "MethodOverloadWithOptionalParameter",
+    Justification = "Data builder files do not follow this convention by design.",
+    Scope = "namespaceanddescendants",
+    Target = "~N:Tests.DataBuilders")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage(
+    "Design",
     "DesignedForInheritance",
     Scope = "module")]

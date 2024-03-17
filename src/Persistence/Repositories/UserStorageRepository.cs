@@ -20,21 +20,28 @@ internal sealed class UserStorageRepository(IDbContext dbContext) : IUserStorage
         return dbContext.SaveChangesAsync(cancellationToken);
     }
 
+    public Task UpdateUserAsync(UserInformation user, CancellationToken cancellationToken)
+    {
+        var entity = dbContext.UserInformation.First(x => x.UserId == user.UserId.Id);
+        entity.Balance = user.Balance.Value;
+        return dbContext.SaveChangesAsync(cancellationToken);
+    }
+
     private static Entities.UserInformation Map(UserInformation entity)
     {
         return new Entities.UserInformation
         {
             Balance = entity.Balance.Value,
-            UserId = entity.Id.Id
+            UserId = entity.UserId.Id
         };
     }
 
-    private static UserInformation? Map(Entities.UserInformation entity)
+    private static UserInformation Map(Entities.UserInformation entity)
     {
         return new UserInformation
         {
             Balance = new UserBalance(entity.Balance),
-            Id = new UserId(entity.UserId)
+            UserId = new UserId(entity.UserId)
         };
     }
 }

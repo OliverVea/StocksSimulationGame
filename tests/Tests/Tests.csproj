@@ -6,7 +6,7 @@
         <PackageReference Include="Microsoft.EntityFrameworkCore" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
         <PackageReference Include="Microsoft.Extensions.Configuration" />
-        <PackageReference Include="Moq" />
+        <PackageReference Include="NSubstitute" />
         <PackageReference Include="NUnit" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" />
     </ItemGroup>
