@@ -1,6 +1,9 @@
 ﻿namespace Core.Services;
 
-public sealed class SimulationSteppingService(ISimulationInformationService simulationInformationService, IStockPriceSteppingService stockPriceSteppingService) : ISimulationSteppingService
+public sealed class SimulationSteppingService(
+    ISimulationInformationService simulationInformationService,
+    IStockPriceSteppingService stockPriceSteppingService,
+    ITradeResolutionService tradeResolutionService) : ISimulationSteppingService
 {
     public async Task StepSimulationAsync(CancellationToken cancellationToken)
     {
@@ -8,7 +11,9 @@ public sealed class SimulationSteppingService(ISimulationInformationService simu
         var newSimulationStep = currentSimulationStep + 1;
         
         await stockPriceSteppingService.OnSimulationSteppedAsync(newSimulationStep, cancellationToken);
+        await tradeResolutionService.ResolveTradesAsync(cancellationToken);
         
         await simulationInformationService.IncrementSimulationStepAsync(cancellationToken);
+        
     }
 }

@@ -21,4 +21,13 @@ public static partial class DataBuilder
         return Fixture.Build<UserInformation>();
     }
     
+    public static IPostprocessComposer<UserInformation> UserInformation(UserId? userId = null)
+    {
+        var userInformation = UserInformation();
+        
+        if (userId.HasValue) userInformation = userInformation.With(x => x.UserId, userId.Value);
+        
+        return userInformation;
+    }
+    
 }

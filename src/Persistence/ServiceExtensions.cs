@@ -83,6 +83,7 @@ public static class ServiceExtensions
         builder.AddScoped<IUserStorageRepository, UserStorageRepository>();
         builder.AddScoped<IUserPortfolioStorageRepository, UserPortfolioStorageRepository>();
         builder.AddScoped<IAskStorageRepository, AskStorageRepository>();
+        builder.AddScoped<IBidStorageRepository, BidStorageRepository>();
         builder.AddScoped<IDbContext>(provider => provider.GetRequiredService<ProjectDbContext>());
     }
     

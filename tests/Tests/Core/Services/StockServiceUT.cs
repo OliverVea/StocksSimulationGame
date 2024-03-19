@@ -42,7 +42,7 @@ public sealed class StockServiceUT : BaseUT<IStockService, StockService>
     {
         // Arrange
         var request = DataBuilder.AddStocksRequest(errorIfDuplicate: false).Create();
-        var existingStocks = DataBuilder.ListStocksResponse().Create();
+        var existingStocks = DataBuilder.ListStocksResponse(stockCount: 3).Create();
         
         MockListStocksWithIdsAsync(existingStocks);
         
@@ -61,7 +61,7 @@ public sealed class StockServiceUT : BaseUT<IStockService, StockService>
     {
         // Arrange
         var request = DataBuilder.AddStocksRequest(errorIfDuplicate: true).Create();
-        var existingStocks = DataBuilder.ListStocksResponse().Create();
+        var existingStocks = DataBuilder.ListStocksResponse(stockCount: 3).Create();
         
         MockListStocksWithIdsAsync(existingStocks);
         

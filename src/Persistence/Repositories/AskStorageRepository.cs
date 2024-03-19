@@ -31,7 +31,7 @@ internal sealed class AskStorageRepository(IDbContext dbContext) : IAskStorageRe
         
         if (request.StockId is {} stockId) query = query.Where(e => e.StockId == stockId.Id);
         
-        if (request.MinPrice is {} minPrice) query = query.Where(e => e.PricePerUnit >= minPrice.Value);
+        if (request.MaxPrice is {} maxPrice) query = query.Where(e => e.PricePerUnit <= maxPrice.Value);
         
         return Map(await query.ToArrayAsync(cancellationToken));
     }

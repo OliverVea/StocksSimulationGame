@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace Tests.Core.Util;
 
-public class IEnumerableExtensionsUT
+public class IEnumerableExtensionsUT : BaseUT
 {
     [Test]
     public void SumPrice_EmptyList_ReturnsZeroPrice()

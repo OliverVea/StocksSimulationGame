@@ -11,7 +11,7 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(ProjectDbContext))]
-    [Migration("20240316044221_Initial")]
+    [Migration("20240318145042_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -30,14 +30,12 @@ namespace Persistence.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<Guid>("AskId")
-                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<float>("PricePerUnit")
                         .HasColumnType("REAL");
 
                     b.Property<Guid>("StockId")
-                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("UserId")
@@ -48,6 +46,34 @@ namespace Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Asks");
+                });
+
+            modelBuilder.Entity("Persistence.Entities.Bid", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Amount")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid>("BidId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<float>("PricePerUnit")
+                        .HasColumnType("REAL");
+
+                    b.Property<Guid>("StockId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Bids");
                 });
 
             modelBuilder.Entity("Persistence.Entities.CurrentSimulationStep", b =>
@@ -139,8 +165,8 @@ namespace Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<decimal>("Balance")
-                        .HasColumnType("TEXT");
+                    b.Property<float>("Balance")
+                        .HasColumnType("REAL");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -150,6 +176,28 @@ namespace Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("UserInformation");
+                });
+
+            modelBuilder.Entity("Persistence.Entities.UserPortfolioStock", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid>("StockId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserPortfolioStocks");
                 });
 #pragma warning restore 612, 618
         }

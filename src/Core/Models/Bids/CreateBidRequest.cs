@@ -1,0 +1,12 @@
+﻿using Core.Models.Ids;
+using Core.Models.Prices;
+
+namespace Core.Models.Bids;
+
+public sealed record CreateBidRequest
+{
+    public required UserId UserId { get; init; }
+    public required StockId StockId { get; init; }
+    public int Amount { get; init; }
+    public Price PricePerUnit { get; init; }
+}

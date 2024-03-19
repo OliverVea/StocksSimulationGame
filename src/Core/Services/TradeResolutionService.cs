@@ -5,7 +5,8 @@ namespace Core.Services;
 public sealed class TradeResolutionService(
     ISimulationInformationService simulationInformationService,
     IStockPriceService stockPriceService,
-    IAskResolutionService askResolutionService) : ITradeResolutionService
+    IAskResolutionService askResolutionService,
+    IBidResolutionService bidResolutionService) : ITradeResolutionService
 {
     public async Task ResolveTradesAsync(CancellationToken cancellationToken)
     {
@@ -22,7 +23,10 @@ public sealed class TradeResolutionService(
     
     private Task ResolveTradesForStockAsync(GetStockPriceResponse stockPrice, CancellationToken cancellationToken)
     {
-        return askResolutionService.ResolveAsksForStockAsync(stockPrice, cancellationToken);
+         var askTask = askResolutionService.ResolveAsksForStockAsync(stockPrice, cancellationToken);
+         var bidTask = bidResolutionService.ResolveBidsForStockAsync(stockPrice, cancellationToken);
+         
+         return Task.WhenAll(askTask, bidTask);
     }
 
     

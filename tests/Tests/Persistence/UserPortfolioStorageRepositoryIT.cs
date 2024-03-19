@@ -1,5 +1,6 @@
 ﻿using AutoFixture;
 using Core.Models.Ids;
+using Core.Models.Portfolio;
 using Core.Repositories;
 using NUnit.Framework;
 using Tests.DataBuilders;
@@ -103,6 +104,7 @@ public sealed class UserPortfolioStorageRepositoryIT : BaseIT<IUserPortfolioStor
         // Arrange
         const int createCount = 999;
         const int deleteCount = 42;
+        const int alterCount = 7;
         
         var stocks = DataBuilder.SetPortfolioStock().CreateMany(createCount).ToArray();
         var setRequest = DataBuilder.SetPortfolioRequest(_userId, stocks).Create();
@@ -111,8 +113,13 @@ public sealed class UserPortfolioStorageRepositoryIT : BaseIT<IUserPortfolioStor
 
         var zeroStocks = stocks[..deleteCount];
         zeroStocks = zeroStocks.Select(x => x with { Quantity = 0 }).ToArray();
+        
+        var alteredStocks = stocks[deleteCount..(deleteCount + alterCount)];
+        alteredStocks = alteredStocks.Select(x => x with { Quantity = 9 }).ToArray();
 
-        setRequest = DataBuilder.SetPortfolioRequest(_userId, zeroStocks).Create();
+        var allModifiedStocks = zeroStocks.Concat(alteredStocks).ToArray();
+        
+        setRequest = DataBuilder.SetPortfolioRequest(_userId, allModifiedStocks).Create();
 
         // Act
         await Sut.SetPortfolioAsync(setRequest, CancellationToken);
@@ -122,5 +129,14 @@ public sealed class UserPortfolioStorageRepositoryIT : BaseIT<IUserPortfolioStor
         var actual = await Sut.GetUserPortfolioAsync(getRequest, CancellationToken);
         Assert.That(actual.UserId, Is.EqualTo(_userId));
         Assert.That(actual.Stocks, Has.Count.EqualTo(createCount - deleteCount));
+        
+        var zeroStockIds = zeroStocks.Select(x => x.StockId).ToArray();
+        var zeroStocksInPortfolio = actual.Stocks.Where(x => zeroStockIds.Contains(x.StockId)).ToArray();
+        Assert.That(zeroStocksInPortfolio, Is.Empty);
+        
+        var alteredStockIds = alteredStocks.Select(x => x.StockId).ToArray();
+        var alteredStocksInPortfolio = actual.Stocks.Where(x => alteredStockIds.Contains(x.StockId)).ToArray();
+        Assert.That(alteredStocksInPortfolio, Has.Length.EqualTo(alterCount));
+        Assert.That(alteredStocksInPortfolio, Has.All.Matches<GetUserPortfolioStock>(x => x.Quantity == 9));
     }
 }

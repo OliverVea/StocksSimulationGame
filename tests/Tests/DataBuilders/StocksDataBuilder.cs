@@ -16,11 +16,12 @@ public static partial class DataBuilder
             .With(x => x.ErrorIfDuplicate, false);
     }
     
-    public static IPostprocessComposer<AddStocksRequest> AddStocksRequest(bool errorIfDuplicate = false)
+    public static IPostprocessComposer<AddStocksRequest> AddStocksRequest(bool errorIfDuplicate = false, IReadOnlyCollection<AddStockRequest>? stocks = null)
     {
         var request = AddStocksRequest();
         
         if (errorIfDuplicate) request = request.With(x => x.ErrorIfDuplicate, true);
+        if (stocks is not null) request = request.With(x => x.Stocks, stocks);
         
         return request;
     }
@@ -51,7 +52,33 @@ public static partial class DataBuilder
     
     public static IPostprocessComposer<ListStocksResponse> ListStocksResponse()
     {
-        return Fixture.Build<ListStocksResponse>();
+        return Fixture.Build<ListStocksResponse>()
+            .WithEmpty(x => x.Stocks);
+    }
+    
+    public static IPostprocessComposer<ListStocksResponse> ListStocksResponse(int? stockCount = null, IReadOnlyCollection<StockId>? stockIds = null)
+    {
+        var response = ListStocksResponse();
+
+        if (stockIds is not null)
+        {
+            var listStockResponse = ListStockResponse();
+            
+            var listStockResponses = stockIds.Select(id => listStockResponse.With(x => x.StockId, id).Create()).ToArray();
+            
+            response = response.With(x => x.Stocks, listStockResponses);
+        }
+        
+        if (stockCount is not null)
+        {
+            var listStockResponse = ListStockResponse();
+            
+            var listStockResponses = listStockResponse.CreateMany(stockCount.Value).ToArray();
+            
+            response = response.With(x => x.Stocks, listStockResponses);
+        }
+        
+        return response;
     }
     
     public static IPostprocessComposer<ListStockResponse> ListStockResponse()
@@ -83,5 +110,33 @@ public static partial class DataBuilder
     public static IPostprocessComposer<DeleteStocksResponse> DeleteStocksResponse()
     {
         return Fixture.Build<DeleteStocksResponse>();
+    }
+
+    public static IPostprocessComposer<ListStocksWithIdsRequest> ListStocksWithIdsRequest()
+    {
+        return Fixture.Build<ListStocksWithIdsRequest>();
+    }
+
+    public static IPostprocessComposer<ListStocksWithIdsRequest> ListStocksWithIdsRequest(IReadOnlyCollection<StockId>? stockIds = null)
+    {
+        var request = ListStocksWithIdsRequest();
+
+        if (stockIds is not null) request = request.With(x => x.StockIds, stockIds);
+
+        return request;
+    }
+
+    public static IPostprocessComposer<UpdateStocksRequest> UpdateStocksRequest()
+    {
+        return Fixture.Build<UpdateStocksRequest>();
+    }
+    
+    public static IPostprocessComposer<UpdateStocksRequest> UpdateStocksRequest(IReadOnlyCollection<UpdateStockRequest>? stocks = null)
+    {
+        var request = UpdateStocksRequest();
+        
+        if (stocks is not null) request = request.With(x => x.Stocks, stocks);
+        
+        return request;
     }
 }

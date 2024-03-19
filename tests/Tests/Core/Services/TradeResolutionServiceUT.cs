@@ -14,6 +14,7 @@ public class TradeResolutionServiceUT : BaseUT<ITradeResolutionService, TradeRes
     private ISimulationInformationService _simulationInformationService = null!;
     private IStockPriceService _stockPriceService = null!;
     private IAskResolutionService _askResolutionService = null!;
+    private IBidResolutionService _bidResolutionService = null!;
 
     private const int StockPriceCount = 3;
     private static readonly SimulationStep DefaultSimulationStep = DataBuilder.SimulationStep().Create();
@@ -27,6 +28,7 @@ public class TradeResolutionServiceUT : BaseUT<ITradeResolutionService, TradeRes
         _simulationInformationService = SutBuilder.AddSubstitute<ISimulationInformationService>();
         _stockPriceService = SutBuilder.AddSubstitute<IStockPriceService>();
         _askResolutionService = SutBuilder.AddSubstitute<IAskResolutionService>();
+        _bidResolutionService = SutBuilder.AddSubstitute<IBidResolutionService>();
     }
 
 
@@ -43,6 +45,7 @@ public class TradeResolutionServiceUT : BaseUT<ITradeResolutionService, TradeRes
         foreach (var stockPrice in DefaultStockPrices.StockPrices)
         {
             await _askResolutionService.Received(1).ResolveAsksForStockAsync(stockPrice, CancellationToken);
+            await _bidResolutionService.Received(1).ResolveBidsForStockAsync(stockPrice, CancellationToken);
         }
     }
     

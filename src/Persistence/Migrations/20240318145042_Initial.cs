@@ -18,14 +18,31 @@ namespace Persistence.Migrations
                     Id = table.Column<long>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     UserId = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
-                    StockId = table.Column<Guid>(type: "TEXT", maxLength: 100, nullable: false),
-                    AskId = table.Column<Guid>(type: "TEXT", maxLength: 100, nullable: false),
+                    StockId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    AskId = table.Column<Guid>(type: "TEXT", nullable: false),
                     Amount = table.Column<int>(type: "INTEGER", nullable: false),
                     PricePerUnit = table.Column<float>(type: "REAL", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Asks", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Bids",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    UserId = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    StockId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    BidId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Amount = table.Column<int>(type: "INTEGER", nullable: false),
+                    PricePerUnit = table.Column<float>(type: "REAL", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Bids", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -64,10 +81,10 @@ namespace Persistence.Migrations
                     Id = table.Column<long>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     StockId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    StartingPrice = table.Column<float>(type: "REAL", nullable: false),
                     Ticker = table.Column<string>(type: "TEXT", maxLength: 16, nullable: false),
                     Volatility = table.Column<float>(type: "REAL", nullable: false),
                     Drift = table.Column<float>(type: "REAL", nullable: false),
-                    StartingPrice = table.Column<float>(type: "REAL", nullable: false),
                     Red = table.Column<byte>(type: "INTEGER", nullable: false),
                     Green = table.Column<byte>(type: "INTEGER", nullable: false),
                     Blue = table.Column<byte>(type: "INTEGER", nullable: false)
@@ -84,11 +101,26 @@ namespace Persistence.Migrations
                     Id = table.Column<long>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     UserId = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
-                    Balance = table.Column<decimal>(type: "TEXT", nullable: false)
+                    Balance = table.Column<float>(type: "REAL", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_UserInformation", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserPortfolioStocks",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    UserId = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    StockId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Quantity = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserPortfolioStocks", x => x.Id);
                 });
 
             migrationBuilder.CreateIndex(
@@ -121,6 +153,9 @@ namespace Persistence.Migrations
                 name: "Asks");
 
             migrationBuilder.DropTable(
+                name: "Bids");
+
+            migrationBuilder.DropTable(
                 name: "CurrentSimulationSteps");
 
             migrationBuilder.DropTable(
@@ -131,6 +166,9 @@ namespace Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "UserInformation");
+
+            migrationBuilder.DropTable(
+                name: "UserPortfolioStocks");
         }
     }
 }

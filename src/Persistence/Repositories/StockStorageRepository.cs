@@ -66,6 +66,9 @@ internal sealed class StockStorageRepository(IDbContext dbContext) : IStockStora
             entity.Ticker = update.Ticker ?? entity.Ticker;
             entity.Volatility = update.Volatility ?? entity.Volatility;
             entity.Drift = update.Drift ?? entity.Drift;
+            entity.Red = update.Color?.Red ?? entity.Red;
+            entity.Green = update.Color?.Green ?? entity.Green;
+            entity.Blue = update.Color?.Blue ?? entity.Blue;
         }
         
         return dbContext.SaveChangesAsync(cancellationToken);

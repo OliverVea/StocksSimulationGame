@@ -1,21 +1,20 @@
 ﻿using Core.Models;
-using Core.Repositories;
 
 namespace Core.Services;
 
-public sealed class SimulationInformationService(ISimulationStepStorageRepository simulationStepStorageRepository) : ISimulationInformationService
+public sealed class SimulationInformationService(ISimulationStepService simulationStepService) : ISimulationInformationService
 {
     public async Task<SimulationStep> IncrementSimulationStepAsync(CancellationToken cancellationToken)
     {
-        var simulationStep = await simulationStepStorageRepository.GetCurrentSimulationStepAsync(cancellationToken);
+        var simulationStep = await simulationStepService.GetCurrentSimulationStepAsync(cancellationToken);
         var newSimulationStep = new SimulationStep(simulationStep.Step + 1);
-        await simulationStepStorageRepository.SetCurrentSimulationStepAsync(newSimulationStep, cancellationToken);
+        await simulationStepService.SetCurrentSimulationStepAsync(newSimulationStep, cancellationToken);
         return newSimulationStep;
     }
 
     public Task<SimulationStep> GetCurrentSimulationStepAsync(CancellationToken cancellationToken)
     {
-        return simulationStepStorageRepository.GetCurrentSimulationStepAsync(cancellationToken);
+        return simulationStepService.GetCurrentSimulationStepAsync(cancellationToken);
     }
 
     public async Task<SimulationInformation> GetSimulationInformationAsync(CancellationToken cancellationToken)

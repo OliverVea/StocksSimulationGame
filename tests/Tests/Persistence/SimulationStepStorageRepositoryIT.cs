@@ -43,6 +43,6 @@ public sealed class SimulationStepStorageRepositoryIT : BaseIT<ISimulationStepSt
         var actual = await Sut.GetCurrentSimulationStepAsync(CancellationToken.None);
 
         // Assert
-        Assert.That(actual.Step, Is.Zero);
+        Assert.That(actual, Is.Null);
     }
 }

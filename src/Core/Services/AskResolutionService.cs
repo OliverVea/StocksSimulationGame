@@ -9,14 +9,14 @@ using Microsoft.Extensions.Logging;
 namespace Core.Services;
 
 public sealed class AskResolutionService(
-    ILogger<TradeResolutionService> logger,
+    ILogger<AskResolutionService> logger,
     IUserPortfolioService userPortfolioService,
     IAskService askService,
     IUserService userService) : IAskResolutionService
 {
     public async Task ResolveAsksForStockAsync(GetStockPriceResponse stockPrice, CancellationToken cancellationToken)
     {
-        var getFulfilledAsksRequest = new GetAsksRequest { StockId = stockPrice.StockId, MinPrice = stockPrice.Price };
+        var getFulfilledAsksRequest = new GetAsksRequest { StockId = stockPrice.StockId, MaxPrice = stockPrice.Price };
         var fulfilledAsks = await askService.GetAsksAsync(getFulfilledAsksRequest, cancellationToken);
         
         var fulfilledAsksForUsers = fulfilledAsks.Asks.GroupBy(x => x.UserId);

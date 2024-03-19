@@ -4,9 +4,13 @@ using Tests.DataBuilders;
 namespace Tests;
 
 [Category("Unit Test")]
-public abstract class BaseUT<TContract, TImplementation> where TImplementation : class, TContract
+public abstract class BaseUT
 {
     protected readonly CancellationToken CancellationToken = new();
+}
+
+public abstract class BaseUT<TContract, TImplementation> : BaseUT where TImplementation : class, TContract
+{
 
     private SutBuilder<TImplementation>? _sutBuilder;
     protected SutBuilder<TImplementation> SutBuilder => _sutBuilder ?? throw new InvalidOperationException("SutBuilder not initialized");

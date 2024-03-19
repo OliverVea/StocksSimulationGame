@@ -13,4 +13,8 @@
         <PackageReference Include="Microsoft.Extensions.Hosting" />
         <PackageReference Include="ProductiveRage.SealedClassVerification.Net" />
     </ItemGroup>
+    
+    <ItemGroup>
+      <Folder Include="Migrations\" />
+    </ItemGroup>
 </Project>

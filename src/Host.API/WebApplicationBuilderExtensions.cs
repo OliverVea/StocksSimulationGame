@@ -1,6 +1,7 @@
 ﻿using API.Extensions;
 using Core;
 using Persistence;
+using Caching;
 
 namespace Host;
 
@@ -14,6 +15,7 @@ internal static class WebApplicationBuilderExtensions
         app.AddServiceDefaults();
         
         app.AddApi();
+        app.Services.AddCaching();
         app.Services.AddCore();
         app.AddPersistence();
     }

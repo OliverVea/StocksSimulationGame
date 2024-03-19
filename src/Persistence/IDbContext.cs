@@ -10,6 +10,7 @@ internal interface IDbContext
     DbSet<CurrentSimulationStep> CurrentSimulationSteps { get; }
     DbSet<UserInformation> UserInformation { get; }
     DbSet<Ask> Asks { get; }
+    DbSet<Bid> Bids { get; }
     DbSet<UserPortfolioStock> UserPortfolioStocks { get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }

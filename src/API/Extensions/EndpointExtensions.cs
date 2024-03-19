@@ -1,4 +1,5 @@
-﻿using API.Endpoints.PriceHistory;
+﻿using API.Endpoints.Bids;
+using API.Endpoints.PriceHistory;
 using API.Endpoints.SimulationInformation;
 using API.Endpoints.Stocks;
 using API.Endpoints.User;
@@ -22,5 +23,6 @@ internal static class EndpointExtensions
         groupBuilder.AddStockEndpoints();
         groupBuilder.AddPriceHistoryEndpoints();
         groupBuilder.AddUserEndpoints();
+        groupBuilder.AddBidEndpoints();
     }
 }

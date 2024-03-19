@@ -28,5 +28,6 @@ internal sealed class ProjectDbContext(DbContextOptions<ProjectDbContext> option
     public required DbSet<CurrentSimulationStep> CurrentSimulationSteps { get; init; }
     public required DbSet<UserInformation> UserInformation { get; init; }
     public required DbSet<Ask> Asks { get; init; }
+    public required DbSet<Bid> Bids { get; init; }
     public required DbSet<UserPortfolioStock> UserPortfolioStocks { get; init; }
 }

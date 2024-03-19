@@ -1,7 +1,9 @@
 ﻿using AutoFixture;
+using Core.Models;
 using Core.Repositories;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using NUnit.Framework;
-using Tests.DataBuilders;
+using DataBuilder = Tests.DataBuilders.DataBuilder;
 
 namespace Tests.Persistence;
 
@@ -100,24 +102,40 @@ public sealed class StockPriceStorageRepositoryIT : BaseIT<IStockPriceStorageRep
     public async Task DeleteStockPricesAsync_WithMultipleStockPrices_OnlyDeletesRequestedStockPrices()
     {
         // Arrange
-        var stockId1 = DataBuilder.StockId().Create();
-        var stockId2 = DataBuilder.StockId().Create();
-        var setStockPrice1 = DataBuilder.SetStockPriceRequest().With(x => x.StockId, stockId1).Create();
-        var setStockPrice2 = DataBuilder.SetStockPriceRequest().With(x => x.StockId, stockId2).Create();
-        var deleteStockPrice1 = DataBuilder.DeleteStockPriceRequest().With(x => x.StockId, stockId1).Create();
-        var setStockPricesRequest = DataBuilder.SetStockPricesRequest().With(x => x.StockPrices, [setStockPrice1, setStockPrice2]).Create();
-        var deleteStockPricesRequest = DataBuilder.DeleteStockPricesRequest().With(x => x.StockPrices, [deleteStockPrice1]).Create();
-        var getStockPricesRequest1 = DataBuilder.GetStockPriceInIntervalRequest().With(x => x.StockId, stockId1).Create();
-        var getStockPricesRequest2 = DataBuilder.GetStockPriceInIntervalRequest().With(x => x.StockId, stockId2).Create();
+        var stockId = DataBuilder.StockId().Create();
+        var stockPrice = DataBuilder.SetStockPriceRequest(stockId: stockId).Create();
+        var deleteStockPrice = DataBuilder.DeleteStockPriceRequest(stockId: stockId).Create();
+        var setStockPricesRequest = DataBuilder.SetStockPricesRequest(stockPrices: [stockPrice]).Create();
+        var deleteStockPricesRequest = DataBuilder.DeleteStockPricesRequest().With(x => x.StockPrices, [deleteStockPrice]).Create();
+        var getStockPricesRequest1 = DataBuilder.GetStockPriceInIntervalRequest().With(x => x.StockId, stockId).Create();
         
         // Act
         await Sut.SetStockPricesAsync(setStockPricesRequest, CancellationToken.None);
         await Sut.DeleteStockPricesAsync(deleteStockPricesRequest, CancellationToken.None);
-        var response1 = await Sut.GetStockPriceInIntervalAsync(getStockPricesRequest1, CancellationToken.None);
-        var response2 = await Sut.GetStockPriceInIntervalAsync(getStockPricesRequest2, CancellationToken.None);
+        var response = await Sut.GetStockPriceInIntervalAsync(getStockPricesRequest1, CancellationToken.None);
 
         // Assert
-        Assert.That(response1.StockPrices, Is.Empty);
-        Assert.That(response2.StockPrices, Has.Length.EqualTo(1));
+        Assert.That(response.StockPrices, Is.Empty);
+    }
+    
+    [Test]
+    public async Task GetStockPricesForStepAsync_WithStockPricesWithDifferentSteps_OnlyGetsRequestedStep()
+    {
+        // Arrange
+        var stockId = DataBuilder.StockId().Create();
+        var step1 = DataBuilder.SimulationStep().Create();
+        var step2 = DataBuilder.SimulationStep().Create();
+        var stockPrice1 = DataBuilder.SetStockPriceRequest(stockId: stockId, simulationStep: step1).Create();
+        var stockPrice2 = DataBuilder.SetStockPriceRequest(stockId: stockId, simulationStep: step2).Create();
+        var setStockPricesRequest = DataBuilder.SetStockPricesRequest(stockPrices: [stockPrice1, stockPrice2]).Create();
+        
+        var getStockPricesForStepRequest = DataBuilder.GetStockPricesForStepRequest(simulationStep: step1,  stockIds: [stockId]).Create();
+        
+        // Act
+        await Sut.SetStockPricesAsync(setStockPricesRequest, CancellationToken.None);
+        var response = await Sut.GetStockPricesForStepAsync(getStockPricesForStepRequest, CancellationToken.None);
+
+        // Assert
+        Assert.That(response.StockPrices, Has.Length.EqualTo(1));
     }
 }

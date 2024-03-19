@@ -3,7 +3,7 @@ using NUnit.Framework;
 
 namespace Tests.Core.Util;
 
-public class ColorHelperUT
+public class ColorHelperUT : BaseUT
 {
     private const string ValidCharsString = "0123456789ABCDEF";
     public static string[] Chars => ValidCharsString.Select(x => x.ToString()).ToArray();

@@ -13,7 +13,7 @@ public sealed record GetUserResponseModel
     /// <summary>
     /// The user's balance.
     /// </summary>
-    public decimal Balance { get; init; }
+    public float Balance { get; init; }
     
     internal GetUserResponseModel(Core.Models.User.UserInformation user) =>
         (Id, Balance) = (user.UserId.Id, user.Balance.Value);

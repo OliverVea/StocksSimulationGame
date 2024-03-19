@@ -84,7 +84,7 @@ public sealed class AskStorageRepositoryIT : BaseIT<IAskStorageRepository>
     }
     
     [Test]
-    public async Task GetAsksAsync_WithMinPriceSpecified_OnlyAsksWithPriceAboveMinAreReturned()
+    public async Task GetAsksAsync_WithMaxPriceSpecified_OnlyAsksWithPriceBelowMaxAreReturned()
     {
         // Arrange
         const int count = 100;
@@ -92,15 +92,15 @@ public sealed class AskStorageRepositoryIT : BaseIT<IAskStorageRepository>
         
         var asks = DataBuilder.Ask().With(x => x.UserId, _userId)
             .CreateMany(count)
-            .OrderByDescending(x => x.PricePerUnit.Value)
+            .OrderBy(x => x.PricePerUnit.Value)
             .ToArray();
         
         foreach (var ask in asks) await Sut.CreateAskAsync(ask, CancellationToken);
         
         var topAsks = asks[..top];
-        var minPrice = topAsks.Last().PricePerUnit;
+        var maxPrice = topAsks.Last().PricePerUnit;
 
-        var request = DataBuilder.GetAsksRequest(_userId, minPrice: minPrice).Create();
+        var request = DataBuilder.GetAsksRequest(_userId, maxPrice: maxPrice).Create();
 
         // Act
         var actual = await Sut.GetAsksAsync(request, CancellationToken);
